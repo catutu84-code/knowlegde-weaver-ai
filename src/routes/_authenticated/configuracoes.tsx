@@ -44,7 +44,7 @@ function SettingsPage() {
     if (profile) {
       setName(profile.display_name ?? "");
       setGoal(String(profile.weekly_goal_minutes ?? 300));
-      setLevel(profile.study_level ?? "faculdade");
+      setLevel((profile as { study_level?: string | null }).study_level ?? "faculdade");
     }
   }, [profile]);
 
@@ -57,10 +57,13 @@ function SettingsPage() {
         display_name: name,
         weekly_goal_minutes: Number(goal),
         study_level: level,
-      })
+      } as never)
       .eq("id", profile.id);
     setSaving(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Perfil atualizado!");
     queryClient.invalidateQueries({ queryKey: ["profile"] });
   }

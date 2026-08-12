@@ -68,7 +68,7 @@ function AddMaterialPage() {
         topic_id: topicId,
         status: "processing",
         ...payload,
-      })
+      } as never)
       .select("id")
       .single();
     if (error || !data) throw new Error(error?.message ?? "Falha ao criar material.");
@@ -112,7 +112,10 @@ function AddMaterialPage() {
   }
 
   async function handleText() {
-    if (!textBody.trim()) return toast.error("Cole ou escreva o conteúdo.");
+    if (!textBody.trim()) {
+      toast.error("Cole ou escreva o conteúdo.");
+      return;
+    }
     setBusy(true);
     try {
       const id = await createMaterial({
@@ -131,7 +134,10 @@ function AddMaterialPage() {
   }
 
   async function handleLink() {
-    if (!linkUrl.trim()) return toast.error("Informe o link.");
+    if (!linkUrl.trim()) {
+      toast.error("Informe o link.");
+      return;
+    }
     setBusy(true);
     try {
       const id = await createMaterial({
@@ -140,7 +146,7 @@ function AddMaterialPage() {
         file_name: linkUrl,
       });
       setProgress("Lendo página...");
-      await process({ data: { materialId: id, url: linkUrl } });
+      await process({ data: { materialId: id } });
       toast.success("Conteúdo do link processado!");
       queryClient.invalidateQueries({ queryKey: ["materials"] });
       navigate({ to: "/biblioteca" });

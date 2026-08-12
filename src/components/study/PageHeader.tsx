@@ -3,11 +3,13 @@ import type { ReactNode } from "react";
 export function PageHeader({
   title,
   subtitle,
+  description,
   icon: Icon,
   action,
 }: {
   title: string;
   subtitle?: string;
+  description?: string;
   icon?: React.ComponentType<{ className?: string }>;
   action?: ReactNode;
 }) {
@@ -21,7 +23,9 @@ export function PageHeader({
         ) : null}
         <div>
           <h1 className="text-2xl font-bold sm:text-3xl">{title}</h1>
-          {subtitle ? <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p> : null}
+          {subtitle ?? description ? (
+            <p className="mt-1 text-sm text-muted-foreground">{subtitle ?? description}</p>
+          ) : null}
         </div>
       </div>
       {action}

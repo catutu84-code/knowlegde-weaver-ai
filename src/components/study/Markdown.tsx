@@ -24,7 +24,7 @@ function inline(text: string) {
   });
 }
 
-export function Markdown({ content }: { content: string }) {
+export function Markdown({ content }: { content: string | null | undefined }) {
   const lines = content.split("\n");
   const blocks: React.ReactNode[] = [];
   let list: string[] = [];

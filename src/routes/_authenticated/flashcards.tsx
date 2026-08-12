@@ -94,8 +94,7 @@ function FlashcardsPage() {
       .update({
         ease: known ? Math.min(4, (current.ease || 2.5) + 0.15) : Math.max(1.3, (current.ease || 2.5) - 0.3),
         due_at: new Date(Date.now() + nextDays * 86400000).toISOString(),
-        reviews: undefined,
-      })
+      } as never)
       .eq("id", current.id);
 
     if (!known) {

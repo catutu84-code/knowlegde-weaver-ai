@@ -57,8 +57,11 @@ function LibraryPage() {
   );
 
   async function createNode(table: "courses" | "subjects" | "topics", payload: Record<string, unknown>) {
-    const { error } = await supabase.from(table).insert({ user_id: user!.id, ...payload });
-    if (error) return toast.error(error.message);
+    const { error } = await supabase.from(table).insert({ user_id: user!.id, ...payload } as never);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Criado com sucesso!");
     queryClient.invalidateQueries();
   }
@@ -67,7 +70,10 @@ function LibraryPage() {
     if (!confirm("Excluir este material?")) return;
     if (path) await supabase.storage.from("materials").remove([path]);
     const { error } = await supabase.from("materials").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Material excluído.");
     queryClient.invalidateQueries({ queryKey: ["materials"] });
   }
@@ -91,19 +97,25 @@ function LibraryPage() {
           <NewNodeDialog
             label="Novo curso"
             fields={[{ key: "name", label: "Nome do curso" }]}
-            onSubmit={(values) => createNode("courses", { name: values["name"] })}
+            onSubmit={async (values) => {
+              await createNode("courses", { name: values["name"] });
+            }}
           />
           <NewNodeDialog
             label="Nova matéria"
             disabled={!courseId}
             fields={[{ key: "name", label: "Nome da matéria" }]}
-            onSubmit={(values) => createNode("subjects", { name: values["name"], course_id: courseId })}
+            onSubmit={async (values) => {
+              await createNode("subjects", { name: values["name"], course_id: courseId });
+            }}
           />
           <NewNodeDialog
             label="Novo assunto"
             disabled={!subjectId}
             fields={[{ key: "name", label: "Nome do assunto" }]}
-            onSubmit={(values) => createNode("topics", { name: values["name"], subject_id: subjectId })}
+            onSubmit={async (values) => {
+              await createNode("topics", { name: values["name"], subject_id: subjectId });
+            }}
           />
         </div>
 
