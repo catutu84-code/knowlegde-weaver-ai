@@ -71,6 +71,173 @@ export type Database = {
           },
         ]
       }
+      book_chapters: {
+        Row: {
+          book_id: string
+          content: string | null
+          created_at: string
+          id: string
+          position: number
+          style: string | null
+          summary: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          book_id: string
+          content?: string | null
+          created_at?: string
+          id?: string
+          position: number
+          style?: string | null
+          summary?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          book_id?: string
+          content?: string | null
+          created_at?: string
+          id?: string
+          position?: number
+          style?: string | null
+          summary?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "book_chapters_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      book_notes: {
+        Row: {
+          book_id: string
+          chapter_position: number
+          created_at: string
+          excerpt: string
+          id: string
+          kind: string
+          note: string | null
+          user_id: string
+        }
+        Insert: {
+          book_id: string
+          chapter_position?: number
+          created_at?: string
+          excerpt: string
+          id?: string
+          kind?: string
+          note?: string | null
+          user_id: string
+        }
+        Update: {
+          book_id?: string
+          chapter_position?: number
+          created_at?: string
+          excerpt?: string
+          id?: string
+          kind?: string
+          note?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "book_notes_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      books: {
+        Row: {
+          course_id: string | null
+          created_at: string
+          current_chapter: number
+          custom_instruction: string | null
+          id: string
+          material_ids: string[]
+          outline: Json
+          scope: string
+          sources: Json
+          style: string
+          subject_id: string | null
+          title: string
+          topic_id: string | null
+          total_chapters: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          course_id?: string | null
+          created_at?: string
+          current_chapter?: number
+          custom_instruction?: string | null
+          id?: string
+          material_ids?: string[]
+          outline?: Json
+          scope?: string
+          sources?: Json
+          style?: string
+          subject_id?: string | null
+          title: string
+          topic_id?: string | null
+          total_chapters?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          course_id?: string | null
+          created_at?: string
+          current_chapter?: number
+          custom_instruction?: string | null
+          id?: string
+          material_ids?: string[]
+          outline?: Json
+          scope?: string
+          sources?: Json
+          style?: string
+          subject_id?: string | null
+          title?: string
+          topic_id?: string | null
+          total_chapters?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "books_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "books_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "books_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chat_messages: {
         Row: {
           content: string

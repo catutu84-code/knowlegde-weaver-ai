@@ -72,15 +72,23 @@ export function useTopics(subjectId?: string | null) {
 }
 
 export function useMaterials(filters?: {
+  courseId?: string | null;
   subjectId?: string | null;
   topicId?: string | null;
   onlyMine?: boolean;
   userId?: string | null;
 }) {
   return useQuery({
-    queryKey: ["materials", filters?.subjectId ?? "all", filters?.topicId ?? "all", filters?.onlyMine ?? false],
+    queryKey: [
+      "materials",
+      filters?.courseId ?? "all",
+      filters?.subjectId ?? "all",
+      filters?.topicId ?? "all",
+      filters?.onlyMine ?? false,
+    ],
     queryFn: async () => {
       let q = supabase.from("materials").select("*").order("created_at", { ascending: false });
+      if (filters?.courseId) q = q.eq("course_id", filters.courseId);
       if (filters?.subjectId) q = q.eq("subject_id", filters.subjectId);
       if (filters?.topicId) q = q.eq("topic_id", filters.topicId);
       if (filters?.onlyMine && filters.userId) q = q.eq("user_id", filters.userId);
@@ -89,6 +97,26 @@ export function useMaterials(filters?: {
       return (data ?? []) as Material[];
     },
   });
+}
+
+export type TaxonomyTable = "courses" | "subjects" | "topics";
+
+export async function renameNode(table: TaxonomyTable, id: string, name: string) {
+  const { error } = await supabase.from(table).update({ name } as never).eq("id", id);
+  if (error) throw new Error(error.message);
+}
+
+export async function deleteNode(table: TaxonomyTable, id: string) {
+  const { error } = await supabase.from(table).delete().eq("id", id);
+  if (error) throw new Error(error.message);
+}
+
+export async function moveMaterial(
+  id: string,
+  target: { course_id: string | null; subject_id: string | null; topic_id: string | null },
+) {
+  const { error } = await supabase.from("materials").update(target as never).eq("id", id);
+  if (error) throw new Error(error.message);
 }
 
 export async function logStudySession(input: {

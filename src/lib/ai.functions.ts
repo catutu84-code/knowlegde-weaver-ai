@@ -20,8 +20,9 @@ export const generateExplanation = createServerFn({ method: "POST" })
   .inputValidator(
     (input: {
       mode: TeachMode;
-      scope: "material" | "selected" | "topic" | "subject";
+      scope: "material" | "selected" | "topic" | "subject" | "course";
       materialIds?: string[];
+      courseId?: string | null;
       subjectId?: string | null;
       topicId?: string | null;
       title: string;
@@ -98,8 +99,9 @@ export const generateQuiz = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(
     (input: {
-      scope: "material" | "selected" | "topic" | "subject";
+      scope: "material" | "selected" | "topic" | "subject" | "course";
       materialIds?: string[];
+      courseId?: string | null;
       subjectId?: string | null;
       topicId?: string | null;
       title: string;
@@ -287,8 +289,9 @@ export const askTutor = createServerFn({ method: "POST" })
   .inputValidator(
     (input: {
       question: string;
-      scope: "material" | "selected" | "topic" | "subject";
+      scope: "material" | "selected" | "topic" | "subject" | "course";
       materialIds?: string[];
+      courseId?: string | null;
       subjectId?: string | null;
       topicId?: string | null;
       history: Array<{ role: "user" | "assistant"; content: string }>;
@@ -319,8 +322,9 @@ export const generateFlashcards = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(
     (input: {
-      scope: "material" | "selected" | "topic" | "subject";
+      scope: "material" | "selected" | "topic" | "subject" | "course";
       materialIds?: string[];
+      courseId?: string | null;
       subjectId?: string | null;
       topicId?: string | null;
       count: number;
@@ -370,8 +374,9 @@ export const generateMindMap = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(
     (input: {
-      scope: "material" | "selected" | "topic" | "subject";
+      scope: "material" | "selected" | "topic" | "subject" | "course";
       materialIds?: string[];
+      courseId?: string | null;
       subjectId?: string | null;
       topicId?: string | null;
       title: string;

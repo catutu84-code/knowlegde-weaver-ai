@@ -21,12 +21,14 @@ import { Route as AuthenticatedErrosRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authenticated/favoritos'
 import { Route as AuthenticatedFlashcardsRouteImport } from './routes/_authenticated/flashcards'
 import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
+import { Route as AuthenticatedLivroRouteImport } from './routes/_authenticated/livro'
 import { Route as AuthenticatedMapasRouteImport } from './routes/_authenticated/mapas'
 import { Route as AuthenticatedPlanoRouteImport } from './routes/_authenticated/plano'
 import { Route as AuthenticatedQuizRouteImport } from './routes/_authenticated/quiz'
 import { Route as AuthenticatedRevisoesRouteImport } from './routes/_authenticated/revisoes'
 import { Route as AuthenticatedSimuladosRouteImport } from './routes/_authenticated/simulados'
 import { Route as AuthenticatedTutorRouteImport } from './routes/_authenticated/tutor'
+import { Route as AuthenticatedLivroBookIdRouteImport } from './routes/_authenticated/livro.$bookId'
 import { Route as AuthenticatedMaterialMaterialIdRouteImport } from './routes/_authenticated/material.$materialId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -89,6 +91,11 @@ const AuthenticatedInicioRoute = AuthenticatedInicioRouteImport.update({
   path: '/inicio',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedLivroRoute = AuthenticatedLivroRouteImport.update({
+  id: '/livro',
+  path: '/livro',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedMapasRoute = AuthenticatedMapasRouteImport.update({
   id: '/mapas',
   path: '/mapas',
@@ -119,6 +126,12 @@ const AuthenticatedTutorRoute = AuthenticatedTutorRouteImport.update({
   path: '/tutor',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedLivroBookIdRoute =
+  AuthenticatedLivroBookIdRouteImport.update({
+    id: '/$bookId',
+    path: '/$bookId',
+    getParentRoute: () => AuthenticatedLivroRoute,
+  } as any)
 const AuthenticatedMaterialMaterialIdRoute =
   AuthenticatedMaterialMaterialIdRouteImport.update({
     id: '/material/$materialId',
@@ -138,12 +151,14 @@ export interface FileRoutesByFullPath {
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/flashcards': typeof AuthenticatedFlashcardsRoute
   '/inicio': typeof AuthenticatedInicioRoute
+  '/livro': typeof AuthenticatedLivroRouteWithChildren
   '/mapas': typeof AuthenticatedMapasRoute
   '/plano': typeof AuthenticatedPlanoRoute
   '/quiz': typeof AuthenticatedQuizRoute
   '/revisoes': typeof AuthenticatedRevisoesRoute
   '/simulados': typeof AuthenticatedSimuladosRoute
   '/tutor': typeof AuthenticatedTutorRoute
+  '/livro/$bookId': typeof AuthenticatedLivroBookIdRoute
   '/material/$materialId': typeof AuthenticatedMaterialMaterialIdRoute
 }
 export interface FileRoutesByTo {
@@ -158,12 +173,14 @@ export interface FileRoutesByTo {
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/flashcards': typeof AuthenticatedFlashcardsRoute
   '/inicio': typeof AuthenticatedInicioRoute
+  '/livro': typeof AuthenticatedLivroRouteWithChildren
   '/mapas': typeof AuthenticatedMapasRoute
   '/plano': typeof AuthenticatedPlanoRoute
   '/quiz': typeof AuthenticatedQuizRoute
   '/revisoes': typeof AuthenticatedRevisoesRoute
   '/simulados': typeof AuthenticatedSimuladosRoute
   '/tutor': typeof AuthenticatedTutorRoute
+  '/livro/$bookId': typeof AuthenticatedLivroBookIdRoute
   '/material/$materialId': typeof AuthenticatedMaterialMaterialIdRoute
 }
 export interface FileRoutesById {
@@ -180,12 +197,14 @@ export interface FileRoutesById {
   '/_authenticated/favoritos': typeof AuthenticatedFavoritosRoute
   '/_authenticated/flashcards': typeof AuthenticatedFlashcardsRoute
   '/_authenticated/inicio': typeof AuthenticatedInicioRoute
+  '/_authenticated/livro': typeof AuthenticatedLivroRouteWithChildren
   '/_authenticated/mapas': typeof AuthenticatedMapasRoute
   '/_authenticated/plano': typeof AuthenticatedPlanoRoute
   '/_authenticated/quiz': typeof AuthenticatedQuizRoute
   '/_authenticated/revisoes': typeof AuthenticatedRevisoesRoute
   '/_authenticated/simulados': typeof AuthenticatedSimuladosRoute
   '/_authenticated/tutor': typeof AuthenticatedTutorRoute
+  '/_authenticated/livro/$bookId': typeof AuthenticatedLivroBookIdRoute
   '/_authenticated/material/$materialId': typeof AuthenticatedMaterialMaterialIdRoute
 }
 export interface FileRouteTypes {
@@ -202,12 +221,14 @@ export interface FileRouteTypes {
     | '/favoritos'
     | '/flashcards'
     | '/inicio'
+    | '/livro'
     | '/mapas'
     | '/plano'
     | '/quiz'
     | '/revisoes'
     | '/simulados'
     | '/tutor'
+    | '/livro/$bookId'
     | '/material/$materialId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -222,12 +243,14 @@ export interface FileRouteTypes {
     | '/favoritos'
     | '/flashcards'
     | '/inicio'
+    | '/livro'
     | '/mapas'
     | '/plano'
     | '/quiz'
     | '/revisoes'
     | '/simulados'
     | '/tutor'
+    | '/livro/$bookId'
     | '/material/$materialId'
   id:
     | '__root__'
@@ -243,12 +266,14 @@ export interface FileRouteTypes {
     | '/_authenticated/favoritos'
     | '/_authenticated/flashcards'
     | '/_authenticated/inicio'
+    | '/_authenticated/livro'
     | '/_authenticated/mapas'
     | '/_authenticated/plano'
     | '/_authenticated/quiz'
     | '/_authenticated/revisoes'
     | '/_authenticated/simulados'
     | '/_authenticated/tutor'
+    | '/_authenticated/livro/$bookId'
     | '/_authenticated/material/$materialId'
   fileRoutesById: FileRoutesById
 }
@@ -344,6 +369,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedInicioRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/livro': {
+      id: '/_authenticated/livro'
+      path: '/livro'
+      fullPath: '/livro'
+      preLoaderRoute: typeof AuthenticatedLivroRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/mapas': {
       id: '/_authenticated/mapas'
       path: '/mapas'
@@ -386,6 +418,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTutorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/livro/$bookId': {
+      id: '/_authenticated/livro/$bookId'
+      path: '/$bookId'
+      fullPath: '/livro/$bookId'
+      preLoaderRoute: typeof AuthenticatedLivroBookIdRouteImport
+      parentRoute: typeof AuthenticatedLivroRoute
+    }
     '/_authenticated/material/$materialId': {
       id: '/_authenticated/material/$materialId'
       path: '/material/$materialId'
@@ -395,6 +434,17 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedLivroRouteChildren {
+  AuthenticatedLivroBookIdRoute: typeof AuthenticatedLivroBookIdRoute
+}
+
+const AuthenticatedLivroRouteChildren: AuthenticatedLivroRouteChildren = {
+  AuthenticatedLivroBookIdRoute: AuthenticatedLivroBookIdRoute,
+}
+
+const AuthenticatedLivroRouteWithChildren =
+  AuthenticatedLivroRoute._addFileChildren(AuthenticatedLivroRouteChildren)
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdicionarRoute: typeof AuthenticatedAdicionarRoute
@@ -406,6 +456,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFavoritosRoute: typeof AuthenticatedFavoritosRoute
   AuthenticatedFlashcardsRoute: typeof AuthenticatedFlashcardsRoute
   AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
+  AuthenticatedLivroRoute: typeof AuthenticatedLivroRouteWithChildren
   AuthenticatedMapasRoute: typeof AuthenticatedMapasRoute
   AuthenticatedPlanoRoute: typeof AuthenticatedPlanoRoute
   AuthenticatedQuizRoute: typeof AuthenticatedQuizRoute
@@ -425,6 +476,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFavoritosRoute: AuthenticatedFavoritosRoute,
   AuthenticatedFlashcardsRoute: AuthenticatedFlashcardsRoute,
   AuthenticatedInicioRoute: AuthenticatedInicioRoute,
+  AuthenticatedLivroRoute: AuthenticatedLivroRouteWithChildren,
   AuthenticatedMapasRoute: AuthenticatedMapasRoute,
   AuthenticatedPlanoRoute: AuthenticatedPlanoRoute,
   AuthenticatedQuizRoute: AuthenticatedQuizRoute,
