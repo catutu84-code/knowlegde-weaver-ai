@@ -10,6 +10,7 @@ import { useSession } from "@/lib/auth";
 import { processMaterial } from "@/lib/materials.functions";
 import { useCourses, useSubjects, useTopics } from "@/lib/library";
 import { PageHeader } from "@/components/study/PageHeader";
+import { TaxonomySelect } from "@/components/study/TaxonomySelect";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -167,70 +168,39 @@ function AddMaterialPage() {
       <div className="surface space-y-4 p-5">
         <h2 className="text-sm font-semibold">Onde guardar</h2>
         <div className="grid gap-3 sm:grid-cols-3">
-          <div className="space-y-1.5">
-            <Label className="text-xs">Curso</Label>
-            <Select
-              value={courseId ?? "none"}
-              onValueChange={(v) => {
-                setCourseId(v === "none" ? null : v);
-                setSubjectId(null);
-                setTopicId(null);
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Sem curso" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Sem curso</SelectItem>
-                {(courses.data ?? []).map((c) => (
-                  <SelectItem key={c.id} value={c.id}>
-                    {c.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-1.5">
-            <Label className="text-xs">Matéria</Label>
-            <Select
-              value={subjectId ?? "none"}
-              onValueChange={(v) => {
-                setSubjectId(v === "none" ? null : v);
-                setTopicId(null);
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Sem matéria" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Sem matéria</SelectItem>
-                {(subjects.data ?? []).map((s) => (
-                  <SelectItem key={s.id} value={s.id}>
-                    {s.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-1.5">
-            <Label className="text-xs">Assunto</Label>
-            <Select value={topicId ?? "none"} onValueChange={(v) => setTopicId(v === "none" ? null : v)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Sem assunto" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Sem assunto</SelectItem>
-                {(topics.data ?? []).map((t) => (
-                  <SelectItem key={t.id} value={t.id}>
-                    {t.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <TaxonomySelect
+            kind="course"
+            value={courseId}
+            options={courses.data ?? []}
+            allLabel="Sem curso"
+            onChange={(id) => {
+              setCourseId(id);
+              setSubjectId(null);
+              setTopicId(null);
+            }}
+          />
+          <TaxonomySelect
+            kind="subject"
+            value={subjectId}
+            options={subjects.data ?? []}
+            parentId={courseId}
+            allLabel="Sem matéria"
+            onChange={(id) => {
+              setSubjectId(id);
+              setTopicId(null);
+            }}
+          />
+          <TaxonomySelect
+            kind="topic"
+            value={topicId}
+            options={topics.data ?? []}
+            parentId={subjectId}
+            allLabel="Sem assunto"
+            onChange={(id) => setTopicId(id)}
+          />
         </div>
         <p className="text-xs text-muted-foreground">
-          Crie cursos, matérias e assuntos na Biblioteca para organizar melhor seus estudos.
+          Não existe ainda? Use "+ Criar novo" dentro de cada seletor para criar na hora.
         </p>
       </div>
 

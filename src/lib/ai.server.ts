@@ -7,11 +7,12 @@ const MAX_TOTAL_CHARS = 60000;
 
 export type SourceRef = { id: string; title: string };
 
-export type ContextScope = "material" | "selected" | "topic" | "subject";
+export type ContextScope = "material" | "selected" | "topic" | "subject" | "course";
 
 export type ContextInput = {
   scope: ContextScope;
   materialIds?: string[];
+  courseId?: string | null;
   subjectId?: string | null;
   topicId?: string | null;
 };
@@ -40,6 +41,8 @@ export async function buildContext(
     query = query.eq("topic_id", input.topicId);
   } else if (input.scope === "subject" && input.subjectId) {
     query = query.eq("subject_id", input.subjectId);
+  } else if (input.scope === "course" && input.courseId) {
+    query = query.eq("course_id", input.courseId);
   }
 
   const { data, error } = await query;
