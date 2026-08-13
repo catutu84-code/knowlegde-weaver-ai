@@ -2,6 +2,7 @@ import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState, type ReactNode } from "react";
 import {
+  BookOpen,
   BrainCircuit,
   Home,
   Library,
@@ -34,6 +35,7 @@ import { cn } from "@/lib/utils";
 const NAV = [
   { to: "/inicio", label: "Início", icon: Home },
   { to: "/biblioteca", label: "Biblioteca", icon: Library },
+  { to: "/livro", label: "Modo Livro", icon: BookOpen },
   { to: "/quiz", label: "Quiz", icon: Target },
   { to: "/flashcards", label: "Flashcards", icon: Layers3 },
   { to: "/mapas", label: "Mapas Mentais", icon: Network },
