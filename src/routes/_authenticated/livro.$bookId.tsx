@@ -1,12 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
   BookOpen,
+  Download,
   Highlighter,
+  List,
   Loader2,
   MessageCircleQuestion,
   Send,
@@ -19,6 +21,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/lib/auth";
 import { askAboutBook, generateChapter } from "@/lib/books.functions";
 import { BOOK_STYLES, PASSAGE_ACTIONS } from "@/lib/book-styles";
+import { paginate } from "@/lib/book-pages";
+import { downloadBookPdf } from "@/lib/book-pdf";
 import { generateFlashcards, generateMindMap, generateQuiz } from "@/lib/ai.functions";
 import { PageHeader } from "@/components/study/PageHeader";
 import { Markdown } from "@/components/study/Markdown";
@@ -39,9 +43,9 @@ export const Route = createFileRoute("/_authenticated/livro/$bookId")({
   head: () => ({
     meta: [
       { title: "Leitura inteligente — Mentor IA" },
-      { name: "description", content: "Leia seu material como um livro didático, capítulo por capítulo." },
+      { name: "description", content: "Leia seu material como um livro digital paginado, capítulo por capítulo." },
       { property: "og:title", content: "Leitura inteligente — Mentor IA" },
-      { property: "og:description", content: "Capítulos, destaques e dúvidas explicadas pela IA." },
+      { property: "og:description", content: "Capa, sumário, capítulos paginados e dúvidas explicadas pela IA." },
       { property: "og:type", content: "article" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -63,7 +67,10 @@ type Book = {
   current_chapter: number;
   total_chapters: number;
   sources: Array<{ id: string; title: string }>;
+  created_at: string;
 };
+
+type View = "capa" | "sumario" | "leitura";
 
 function BookReaderPage() {
   const { bookId } = Route.useParams();
@@ -75,9 +82,13 @@ function BookReaderPage() {
   const makeMindMap = useServerFn(generateMindMap);
   const makeQuiz = useServerFn(generateQuiz);
 
+  const [view, setView] = useState<View>("capa");
   const [position, setPosition] = useState<number | null>(null);
+  const [page, setPage] = useState(0);
   const [content, setContent] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [buildingAll, setBuildingAll] = useState<{ done: number; total: number } | null>(null);
+  const [exporting, setExporting] = useState(false);
   const [answer, setAnswer] = useState<{ title: string; content: string } | null>(null);
   const [asking, setAsking] = useState(false);
   const [question, setQuestion] = useState("");
@@ -91,6 +102,24 @@ function BookReaderPage() {
       const { data, error } = await supabase.from("books").select("*").eq("id", bookId).maybeSingle();
       if (error) throw error;
       return data as Book | null;
+    },
+  });
+
+  const chapters = useQuery({
+    queryKey: ["book-chapters", bookId],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("book_chapters")
+        .select("id,position,title,summary,content")
+        .eq("book_id", bookId)
+        .order("position");
+      return (data ?? []) as Array<{
+        id: string;
+        position: number;
+        title: string;
+        summary: string | null;
+        content: string | null;
+      }>;
     },
   });
 
@@ -110,8 +139,14 @@ function BookReaderPage() {
     if (book.data && position === null) setPosition(book.data.current_chapter ?? 0);
   }, [book.data, position]);
 
-  async function loadChapter(next: number, opts?: { force?: boolean; styleOverride?: string }) {
-    setLoading(true);
+  const pages = useMemo(() => (content ? paginate(content) : []), [content]);
+  const totalPagesChapter = Math.max(pages.length, 1);
+
+  async function loadChapter(
+    next: number,
+    opts?: { force?: boolean; styleOverride?: string; toLastPage?: boolean; silent?: boolean },
+  ) {
+    if (!opts?.silent) setLoading(true);
     setAnswer(null);
     try {
       const result = await runChapter({
@@ -124,18 +159,66 @@ function BookReaderPage() {
       });
       setContent(result.content);
       setPosition(next);
+      setPage(opts?.toLastPage ? Math.max(paginate(result.content).length - 1, 0) : 0);
+      setView("leitura");
       queryClient.invalidateQueries({ queryKey: ["book", bookId] });
+      queryClient.invalidateQueries({ queryKey: ["book-chapters", bookId] });
       readerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Não foi possível abrir o capítulo.");
     }
-    setLoading(false);
+    if (!opts?.silent) setLoading(false);
   }
 
-  useEffect(() => {
-    if (position !== null && !content && !loading) void loadChapter(position);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [position]);
+  async function buildWholeBook() {
+    const b = book.data;
+    if (!b) return;
+    const total = b.total_chapters || b.outline?.length || 0;
+    const list = chapters.data ?? [];
+    setBuildingAll({ done: 0, total });
+    try {
+      for (let i = 0; i < total; i += 1) {
+        const already = list.find((c) => c.position === i)?.content;
+        if (!already) {
+          await runChapter({ data: { bookId, position: i, force: false, styleOverride: null } });
+        }
+        setBuildingAll({ done: i + 1, total });
+      }
+      await queryClient.invalidateQueries({ queryKey: ["book-chapters", bookId] });
+      toast.success("Livro completo! Todos os capítulos foram escritos.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Não foi possível concluir o livro.");
+    }
+    setBuildingAll(null);
+  }
+
+  async function exportPdf() {
+    const b = book.data;
+    if (!b) return;
+    setExporting(true);
+    try {
+      const { data } = await supabase
+        .from("book_chapters")
+        .select("position,title,content")
+        .eq("book_id", bookId)
+        .order("position");
+      const list = (data ?? []) as Array<{ position: number; title: string; content: string | null }>;
+      if (list.every((c) => !c.content)) {
+        toast.error("Gere os capítulos antes de baixar o PDF.");
+        setExporting(false);
+        return;
+      }
+      downloadBookPdf({
+        title: b.title,
+        styleLabel: BOOK_STYLES.find((s) => s.value === b.style)?.label ?? b.style,
+        chapters: list.map((c) => ({ title: c.title, content: c.content })),
+      });
+      toast.success("PDF gerado!");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Não foi possível gerar o PDF.");
+    }
+    setExporting(false);
+  }
 
   async function sendQuestion(text: string, excerpt?: string) {
     if (!text.trim() || position === null) return;
@@ -237,32 +320,152 @@ function BookReaderPage() {
   const b = book.data;
   const total = b.total_chapters || b.outline?.length || 1;
   const current = position ?? 0;
-  const pct = Math.round(((current + 1) / total) * 100);
+  const written = (chapters.data ?? []).filter((c) => c.content).length;
+  const readPct = Math.round(((current + (page + 1) / totalPagesChapter) / total) * 100);
   const chapterNotes = (notes.data ?? []).filter((n) => n.chapter_position === current);
+  const styleLabel = BOOK_STYLES.find((s) => s.value === b.style)?.label ?? b.style;
 
+  function goPrev() {
+    if (page > 0) {
+      setPage(page - 1);
+      readerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else if (current > 0) {
+      void loadChapter(current - 1, { toLastPage: true });
+    }
+  }
+
+  function goNext() {
+    if (page < totalPagesChapter - 1) {
+      setPage(page + 1);
+      readerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else if (current < total - 1) {
+      void loadChapter(current + 1);
+    }
+  }
+
+  // ---------- Capa ----------
+  if (view === "capa") {
+    return (
+      <div className="space-y-5">
+        <div className="surface mx-auto max-w-2xl overflow-hidden">
+          <div className="flex min-h-[380px] flex-col items-center justify-center gap-4 bg-gradient-to-b from-primary/20 via-background to-background p-8 text-center">
+            <BookOpen className="size-10 text-primary" />
+            <h1 className="text-2xl font-semibold leading-tight sm:text-3xl">{b.title}</h1>
+            <p className="text-sm text-muted-foreground">Estilo de explicação: {styleLabel}</p>
+            <p className="text-xs text-muted-foreground">
+              {total} capítulos · {written} já escritos · Mentor IA
+            </p>
+          </div>
+          <div className="flex flex-col gap-2 border-t border-border p-5 sm:flex-row sm:flex-wrap">
+            <Button onClick={() => setView("leitura")} className="sm:flex-1">
+              📖 {written > 0 && b.current_chapter > 0 ? "Continuar leitura" : "Começar a ler"}
+            </Button>
+            <Button variant="outline" onClick={() => setView("sumario")}>
+              <List className="size-4" /> Sumário
+            </Button>
+            <Button variant="outline" disabled={exporting} onClick={() => void exportPdf()}>
+              {exporting ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />} Baixar PDF
+            </Button>
+          </div>
+          {written < total ? (
+            <div className="border-t border-border p-5">
+              <Button
+                variant="secondary"
+                className="w-full"
+                disabled={buildingAll !== null}
+                onClick={() => void buildWholeBook()}
+              >
+                {buildingAll ? (
+                  <>
+                    <Loader2 className="size-4 animate-spin" /> Escrevendo capítulo {buildingAll.done} de{" "}
+                    {buildingAll.total}...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="size-4" /> Gerar livro completo ({total - written} capítulos restantes)
+                  </>
+                )}
+              </Button>
+              {buildingAll ? (
+                <Progress className="mt-3" value={Math.round((buildingAll.done / buildingAll.total) * 100)} />
+              ) : null}
+            </div>
+          ) : null}
+        </div>
+        <div className="text-center">
+          <Button asChild size="sm" variant="ghost">
+            <Link to="/livro">Voltar para Minha Biblioteca</Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // ---------- Sumário ----------
+  if (view === "sumario") {
+    return (
+      <div className="space-y-5">
+        <PageHeader
+          title="Sumário"
+          description={b.title}
+          action={
+            <Button size="sm" variant="outline" onClick={() => setView("capa")}>
+              <ArrowLeft className="size-4" /> Capa
+            </Button>
+          }
+        />
+        <div className="surface divide-y divide-border">
+          {(b.outline ?? []).map((c, i) => {
+            const done = (chapters.data ?? []).find((x) => x.position === i)?.content;
+            return (
+              <button
+                key={i}
+                onClick={() => void loadChapter(i)}
+                className="flex w-full items-start gap-3 p-4 text-left hover:bg-muted/40"
+              >
+                <span className="mt-0.5 text-xs font-semibold text-primary">{i + 1}</span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-medium">{c.title}</span>
+                  {c.summary ? (
+                    <span className="block text-xs text-muted-foreground">{c.summary}</span>
+                  ) : null}
+                </span>
+                <Badge variant="outline" className="text-[10px]">
+                  {done ? "pronto" : "gerar"}
+                </Badge>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  // ---------- Leitura ----------
   return (
     <div className="space-y-5">
       <PageHeader
         title={b.title}
-        description={`Livro criado pela IA a partir dos seus materiais. Estilo atual: ${
-          BOOK_STYLES.find((s) => s.value === b.style)?.label ?? b.style
-        }.`}
+        description={`Estilo atual: ${styleLabel}. Capítulo ${current + 1} de ${total}.`}
         action={
-          <Button asChild size="sm" variant="outline">
-            <Link to="/livro">
-              <BookOpen className="size-4" /> Meus livros
-            </Link>
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button size="sm" variant="outline" onClick={() => setView("sumario")}>
+              <List className="size-4" /> Sumário
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => setView("capa")}>
+              <BookOpen className="size-4" /> Capa
+            </Button>
+          </div>
         }
       />
 
       <div className="surface space-y-3 p-4">
         <div className="flex flex-wrap items-center gap-3">
           <div className="min-w-[140px] flex-1">
-            <Progress value={pct} />
+            <Progress value={Math.min(readPct, 100)} />
           </div>
           <span className="text-xs text-muted-foreground">
-            Capítulo {current + 1} de {total} · {pct}%
+            {Math.min(readPct, 100)}% lido · página {page + 1} de {totalPagesChapter}
           </span>
         </div>
         <div className="grid gap-2 sm:grid-cols-2">
@@ -300,7 +503,7 @@ function BookReaderPage() {
         </div>
       </div>
 
-      <div ref={readerRef} className="surface space-y-4 p-5">
+      <div ref={readerRef} className="surface space-y-4 p-5 sm:p-8">
         {loading ? (
           <p className="flex items-center gap-2 py-10 text-sm text-muted-foreground">
             <Loader2 className="size-4 animate-spin" /> A IA está escrevendo este capítulo...
@@ -309,9 +512,14 @@ function BookReaderPage() {
           <div
             onMouseUp={() => setSelection(window.getSelection()?.toString().trim() ?? "")}
             onTouchEnd={() => setSelection(window.getSelection()?.toString().trim() ?? "")}
-            className="reader-content"
+            className="reader-content mx-auto max-w-[68ch] text-[15px] leading-relaxed sm:text-base"
           >
-            <Markdown content={content} />
+            {page === 0 ? (
+              <p className="mb-3 text-xs uppercase tracking-wide text-muted-foreground">
+                Capítulo {current + 1}
+              </p>
+            ) : null}
+            <Markdown content={pages[page] ?? ""} />
           </div>
         )}
 
@@ -357,11 +565,24 @@ function BookReaderPage() {
           <Button
             variant="outline"
             size="sm"
-            disabled={current === 0 || loading}
-            onClick={() => void loadChapter(current - 1)}
+            disabled={loading || (page === 0 && current === 0)}
+            onClick={goPrev}
           >
-            <ArrowLeft className="size-4" /> Capítulo anterior
+            <ArrowLeft className="size-4" /> Página anterior
           </Button>
+          <span className="order-last w-full text-center text-xs text-muted-foreground sm:order-none sm:w-auto">
+            Cap. {current + 1}/{total} · pág. {page + 1}/{totalPagesChapter}
+          </span>
+          <Button
+            size="sm"
+            disabled={loading || (page >= totalPagesChapter - 1 && current >= total - 1)}
+            onClick={goNext}
+            className="ml-auto"
+          >
+            Próxima página <ArrowRight className="size-4" />
+          </Button>
+        </div>
+        <div className="flex flex-wrap gap-2">
           <Button
             variant="secondary"
             size="sm"
@@ -374,13 +595,8 @@ function BookReaderPage() {
           >
             🤔 Não entendi
           </Button>
-          <Button
-            size="sm"
-            disabled={current >= total - 1 || loading}
-            onClick={() => void loadChapter(current + 1)}
-            className="ml-auto"
-          >
-            Próximo capítulo <ArrowRight className="size-4" />
+          <Button variant="outline" size="sm" disabled={exporting} onClick={() => void exportPdf()}>
+            {exporting ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />} Baixar PDF
           </Button>
         </div>
       </div>
@@ -468,13 +684,6 @@ function BookReaderPage() {
             ))}
           </div>
         </div>
-      ) : null}
-
-      {(b.sources ?? []).length > 0 ? (
-        <p className="text-xs text-muted-foreground">
-          Fontes deste livro: {(b.sources ?? []).map((s) => s.title).join(", ")}. Os arquivos originais continuam na
-          Biblioteca.
-        </p>
       ) : null}
     </div>
   );
