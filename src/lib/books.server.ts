@@ -14,7 +14,9 @@ const STYLE_PROMPT: Record<string, string> = {
   historia: "Explique como uma história/narrativa, mantendo todos os conceitos corretos.",
   fofoca: "Explique em tom de fofoca, descontraído e divertido, sem perder nenhum conceito.",
   cotidiano: "Explique usando muitos exemplos do cotidiano e analogias simples.",
+  resumo: "Escreva de forma curta, objetiva e direta ao ponto, priorizando tópicos e o essencial.",
 };
+
 
 export function styleInstruction(style: string, custom?: string | null) {
   const base = STYLE_PROMPT[style] ?? STYLE_PROMPT["simples"]!;
