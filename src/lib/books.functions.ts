@@ -215,3 +215,81 @@ ${ctx.text.slice(0, 30000)}`,
 
     return { content };
   });
+
+export const addContentToBook = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(
+    (input: {
+      bookId: string;
+      scope: BookScope;
+      materialIds?: string[];
+      courseId?: string | null;
+      subjectId?: string | null;
+      topicId?: string | null;
+      instruction?: string | null;
+    }) => input,
+  )
+  .handler(async ({ data, context }) => {
+    const { buildContext, callAI, parseJson, BASE_SYSTEM } = await import("./ai.server");
+    const { loadBook, styleInstruction } = await import("./books.server");
+    const book = await loadBook(context.supabase, data.bookId);
+
+    const ctx = await buildContext(context.supabase, data);
+    if (!ctx.text) throw new Error("Nenhum material processado foi encontrado para essa seleção.");
+
+    const existing = (book.outline ?? []).map((c, i) => `${i + 1}. ${c.title}`).join("\n");
+    const raw = await callAI(
+      [
+        { role: "system", content: BASE_SYSTEM },
+        {
+          role: "user",
+          content: `O livro "${book.title}" já existe com estes capítulos:
+${existing}
+
+O aluno enviou NOVOS materiais para incorporar ao mesmo livro.
+Crie APENAS os novos capítulos necessários para cobrir o conteúdo novo, sem repetir o que já existe.
+
+${styleInstruction(book.style, data.instruction ?? book.custom_instruction)}
+
+Responda SOMENTE com JSON:
+{"chapters":[{"title":"...","summary":"..."}]}
+
+Regras: entre 1 e 8 capítulos novos, coerentes com a sequência do livro.
+
+NOVOS MATERIAIS:
+${ctx.text}`,
+        },
+      ],
+      { temperature: 0.5 },
+    );
+
+    const parsed = parseJson<{ chapters?: Array<{ title: string; summary?: string }> }>(raw);
+    const novos = (parsed.chapters ?? []).filter((c) => c?.title).slice(0, 8);
+    if (novos.length === 0) throw new Error("A IA não encontrou conteúdo novo para adicionar.");
+
+    const start = book.total_chapters || (book.outline ?? []).length;
+    const insert = await context.supabase.from("book_chapters").insert(
+      novos.map((c, i) => ({
+        book_id: book.id,
+        user_id: context.userId,
+        position: start + i,
+        title: c.title,
+        summary: c.summary ?? null,
+      })),
+    );
+    if (insert.error) throw new Error("Não foi possível salvar os novos capítulos.");
+
+    const mergedIds = Array.from(new Set([...(book.material_ids ?? []), ...ctx.sources.map((s) => s.id)]));
+    const outline = [...(book.outline ?? []), ...novos] as unknown as Json;
+    await context.supabase
+      .from("books")
+      .update({
+        outline,
+        material_ids: mergedIds,
+        total_chapters: start + novos.length,
+        scope: mergedIds.length > 0 ? "selected" : book.scope,
+      })
+      .eq("id", book.id);
+
+    return { added: novos.length, total: start + novos.length };
+  });
