@@ -2,12 +2,13 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { BookOpen, Loader2, Sparkles, Trash2 } from "lucide-react";
+import { BookOpen, Download, Loader2, Pencil, Plus, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
-import { createBook } from "@/lib/books.functions";
+import { addContentToBook, createBook } from "@/lib/books.functions";
 import { BOOK_STYLES } from "@/lib/book-styles";
+import { downloadBookPdf } from "@/lib/book-pdf";
 import { PageHeader } from "@/components/study/PageHeader";
 import { ScopePicker, emptyScope, type StudyScope } from "@/components/study/ScopePicker";
 import { Button } from "@/components/ui/button";
@@ -15,7 +16,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+
 
 export const Route = createFileRoute("/_authenticated/livro")({
   head: () => ({
