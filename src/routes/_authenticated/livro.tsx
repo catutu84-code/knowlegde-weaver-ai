@@ -111,6 +111,68 @@ function BookHomePage() {
     queryClient.invalidateQueries({ queryKey: ["books"] });
   }
 
+  async function rename(book: BookRow) {
+    const next = prompt("Novo nome do livro:", book.title)?.trim();
+    if (!next || next === book.title) return;
+    const { error } = await supabase.from("books").update({ title: next }).eq("id", book.id);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    queryClient.invalidateQueries({ queryKey: ["books"] });
+    toast.success("Livro renomeado.");
+  }
+
+  async function downloadPdf(book: BookRow) {
+    setPdfId(book.id);
+    try {
+      const { data } = await supabase
+        .from("book_chapters")
+        .select("title,content")
+        .eq("book_id", book.id)
+        .order("position");
+      const chapters = (data ?? []) as Array<{ title: string; content: string | null }>;
+      if (chapters.length === 0) throw new Error("Este livro ainda não tem capítulos.");
+      if (!chapters.some((c) => c.content)) {
+        throw new Error("Gere ao menos um capítulo antes de baixar o PDF.");
+      }
+      downloadBookPdf({
+        title: book.title,
+        styleLabel: BOOK_STYLES.find((s) => s.value === book.style)?.label ?? book.style,
+        chapters,
+      });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Não foi possível gerar o PDF.");
+    }
+    setPdfId(null);
+  }
+
+  async function handleAddContent() {
+    if (!addTarget) return;
+    setAdding(true);
+    try {
+      const result = await addToBook({
+        data: {
+          bookId: addTarget.id,
+          scope: addScope.scope,
+          materialIds: addScope.materialIds,
+          courseId: addScope.courseId,
+          subjectId: addScope.subjectId,
+          topicId: addScope.topicId,
+          instruction: addInstruction || null,
+        },
+      });
+      queryClient.invalidateQueries({ queryKey: ["books"] });
+      toast.success(`${result.added} novo(s) capítulo(s) adicionado(s).`);
+      setAddTarget(null);
+      setAddInstruction("");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Não foi possível adicionar conteúdo.");
+    }
+    setAdding(false);
+  }
+
+
   return (
     <div className="space-y-6">
       <PageHeader
