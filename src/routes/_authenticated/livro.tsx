@@ -255,29 +255,93 @@ function BookHomePage() {
                       <BookOpen className="mr-1.5 inline size-4 text-primary" />
                       {b.title}
                     </Link>
-                    <button
-                      onClick={() => remove(b.id)}
-                      className="text-muted-foreground hover:text-destructive"
-                      title="Excluir livro"
-                    >
-                      <Trash2 className="size-4" />
-                    </button>
+                    <div className="flex shrink-0 items-center gap-1.5">
+                      <button
+                        onClick={() => rename(b)}
+                        className="text-muted-foreground hover:text-primary"
+                        title="Renomear livro"
+                      >
+                        <Pencil className="size-4" />
+                      </button>
+                      <button
+                        onClick={() => remove(b.id)}
+                        className="text-muted-foreground hover:text-destructive"
+                        title="Excluir livro"
+                      >
+                        <Trash2 className="size-4" />
+                      </button>
+                    </div>
                   </div>
                   <Progress value={pct} />
                   <p className="text-xs text-muted-foreground">
                     Capítulo {Math.min(b.current_chapter + 1, b.total_chapters)} de {b.total_chapters} · {pct}%
                   </p>
-                  <Button asChild size="sm" variant="outline" className="mt-auto">
-                    <Link to="/livro/$bookId" params={{ bookId: b.id }}>
-                      Continuar leitura
-                    </Link>
-                  </Button>
+                  <div className="mt-auto grid gap-2 sm:grid-cols-2">
+                    <Button asChild size="sm" variant="outline">
+                      <Link to="/livro/$bookId" params={{ bookId: b.id }}>
+                        Continuar leitura
+                      </Link>
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => downloadPdf(b)}
+                      disabled={pdfId === b.id}
+                    >
+                      {pdfId === b.id ? (
+                        <Loader2 className="size-4 animate-spin" />
+                      ) : (
+                        <Download className="size-4" />
+                      )}
+                      Baixar PDF
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="sm:col-span-2"
+                      onClick={() => {
+                        setAddTarget(b);
+                        setAddScope({ ...emptyScope, scope: "selected" });
+                      }}
+                    >
+                      <Plus className="size-4" />
+                      Adicionar conteúdo
+                    </Button>
+                  </div>
                 </div>
               );
             })}
           </div>
         )}
       </div>
+
+      <Dialog open={!!addTarget} onOpenChange={(open) => !open && setAddTarget(null)}>
+        <DialogContent className="max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Adicionar conteúdo ao livro</DialogTitle>
+            <DialogDescription>
+              Escolha novos materiais e a IA cria apenas os capítulos que faltam em “{addTarget?.title}”.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <ScopePicker value={addScope} onChange={setAddScope} />
+            <div className="space-y-1.5">
+              <Label className="text-xs">Instrução (opcional)</Label>
+              <Textarea
+                rows={2}
+                placeholder="Ex.: foque nos pontos que ainda não foram explicados."
+                value={addInstruction}
+                onChange={(e) => setAddInstruction(e.target.value)}
+              />
+            </div>
+            <Button onClick={handleAddContent} disabled={adding} className="w-full">
+              {adding ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
+              Adicionar capítulos
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
     </div>
   );
 }
