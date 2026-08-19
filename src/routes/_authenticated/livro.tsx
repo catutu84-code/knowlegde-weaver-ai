@@ -2,12 +2,13 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { BookOpen, Loader2, Sparkles, Trash2 } from "lucide-react";
+import { BookOpen, Download, Loader2, Pencil, Plus, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
-import { createBook } from "@/lib/books.functions";
+import { addContentToBook, createBook } from "@/lib/books.functions";
 import { BOOK_STYLES } from "@/lib/book-styles";
+import { downloadBookPdf } from "@/lib/book-pdf";
 import { PageHeader } from "@/components/study/PageHeader";
 import { ScopePicker, emptyScope, type StudyScope } from "@/components/study/ScopePicker";
 import { Button } from "@/components/ui/button";
@@ -15,7 +16,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+
 
 export const Route = createFileRoute("/_authenticated/livro")({
   head: () => ({
@@ -50,11 +59,17 @@ function BookHomePage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const create = useServerFn(createBook);
+  const addToBook = useServerFn(addContentToBook);
   const [scope, setScope] = useState<StudyScope>({ ...emptyScope, scope: "selected" });
   const [style, setStyle] = useState<string>("simples");
   const [custom, setCustom] = useState("");
   const [title, setTitle] = useState("");
   const [busy, setBusy] = useState(false);
+  const [pdfId, setPdfId] = useState<string | null>(null);
+  const [addTarget, setAddTarget] = useState<BookRow | null>(null);
+  const [addScope, setAddScope] = useState<StudyScope>({ ...emptyScope, scope: "selected" });
+  const [addInstruction, setAddInstruction] = useState("");
+  const [adding, setAdding] = useState(false);
 
   const books = useQuery({
     queryKey: ["books"],
@@ -101,6 +116,68 @@ function BookHomePage() {
     }
     queryClient.invalidateQueries({ queryKey: ["books"] });
   }
+
+  async function rename(book: BookRow) {
+    const next = prompt("Novo nome do livro:", book.title)?.trim();
+    if (!next || next === book.title) return;
+    const { error } = await supabase.from("books").update({ title: next }).eq("id", book.id);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    queryClient.invalidateQueries({ queryKey: ["books"] });
+    toast.success("Livro renomeado.");
+  }
+
+  async function downloadPdf(book: BookRow) {
+    setPdfId(book.id);
+    try {
+      const { data } = await supabase
+        .from("book_chapters")
+        .select("title,content")
+        .eq("book_id", book.id)
+        .order("position");
+      const chapters = (data ?? []) as Array<{ title: string; content: string | null }>;
+      if (chapters.length === 0) throw new Error("Este livro ainda não tem capítulos.");
+      if (!chapters.some((c) => c.content)) {
+        throw new Error("Gere ao menos um capítulo antes de baixar o PDF.");
+      }
+      downloadBookPdf({
+        title: book.title,
+        styleLabel: BOOK_STYLES.find((s) => s.value === book.style)?.label ?? book.style,
+        chapters,
+      });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Não foi possível gerar o PDF.");
+    }
+    setPdfId(null);
+  }
+
+  async function handleAddContent() {
+    if (!addTarget) return;
+    setAdding(true);
+    try {
+      const result = await addToBook({
+        data: {
+          bookId: addTarget.id,
+          scope: addScope.scope,
+          materialIds: addScope.materialIds,
+          courseId: addScope.courseId,
+          subjectId: addScope.subjectId,
+          topicId: addScope.topicId,
+          instruction: addInstruction || null,
+        },
+      });
+      queryClient.invalidateQueries({ queryKey: ["books"] });
+      toast.success(`${result.added} novo(s) capítulo(s) adicionado(s).`);
+      setAddTarget(null);
+      setAddInstruction("");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Não foi possível adicionar conteúdo.");
+    }
+    setAdding(false);
+  }
+
 
   return (
     <div className="space-y-6">
@@ -178,29 +255,93 @@ function BookHomePage() {
                       <BookOpen className="mr-1.5 inline size-4 text-primary" />
                       {b.title}
                     </Link>
-                    <button
-                      onClick={() => remove(b.id)}
-                      className="text-muted-foreground hover:text-destructive"
-                      title="Excluir livro"
-                    >
-                      <Trash2 className="size-4" />
-                    </button>
+                    <div className="flex shrink-0 items-center gap-1.5">
+                      <button
+                        onClick={() => rename(b)}
+                        className="text-muted-foreground hover:text-primary"
+                        title="Renomear livro"
+                      >
+                        <Pencil className="size-4" />
+                      </button>
+                      <button
+                        onClick={() => remove(b.id)}
+                        className="text-muted-foreground hover:text-destructive"
+                        title="Excluir livro"
+                      >
+                        <Trash2 className="size-4" />
+                      </button>
+                    </div>
                   </div>
                   <Progress value={pct} />
                   <p className="text-xs text-muted-foreground">
                     Capítulo {Math.min(b.current_chapter + 1, b.total_chapters)} de {b.total_chapters} · {pct}%
                   </p>
-                  <Button asChild size="sm" variant="outline" className="mt-auto">
-                    <Link to="/livro/$bookId" params={{ bookId: b.id }}>
-                      Continuar leitura
-                    </Link>
-                  </Button>
+                  <div className="mt-auto grid gap-2 sm:grid-cols-2">
+                    <Button asChild size="sm" variant="outline">
+                      <Link to="/livro/$bookId" params={{ bookId: b.id }}>
+                        Continuar leitura
+                      </Link>
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => downloadPdf(b)}
+                      disabled={pdfId === b.id}
+                    >
+                      {pdfId === b.id ? (
+                        <Loader2 className="size-4 animate-spin" />
+                      ) : (
+                        <Download className="size-4" />
+                      )}
+                      Baixar PDF
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="sm:col-span-2"
+                      onClick={() => {
+                        setAddTarget(b);
+                        setAddScope({ ...emptyScope, scope: "selected" });
+                      }}
+                    >
+                      <Plus className="size-4" />
+                      Adicionar conteúdo
+                    </Button>
+                  </div>
                 </div>
               );
             })}
           </div>
         )}
       </div>
+
+      <Dialog open={!!addTarget} onOpenChange={(open) => !open && setAddTarget(null)}>
+        <DialogContent className="max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Adicionar conteúdo ao livro</DialogTitle>
+            <DialogDescription>
+              Escolha novos materiais e a IA cria apenas os capítulos que faltam em “{addTarget?.title}”.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <ScopePicker value={addScope} onChange={setAddScope} />
+            <div className="space-y-1.5">
+              <Label className="text-xs">Instrução (opcional)</Label>
+              <Textarea
+                rows={2}
+                placeholder="Ex.: foque nos pontos que ainda não foram explicados."
+                value={addInstruction}
+                onChange={(e) => setAddInstruction(e.target.value)}
+              />
+            </div>
+            <Button onClick={handleAddContent} disabled={adding} className="w-full">
+              {adding ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
+              Adicionar capítulos
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
     </div>
   );
 }
