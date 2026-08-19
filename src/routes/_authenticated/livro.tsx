@@ -59,11 +59,17 @@ function BookHomePage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const create = useServerFn(createBook);
+  const addToBook = useServerFn(addContentToBook);
   const [scope, setScope] = useState<StudyScope>({ ...emptyScope, scope: "selected" });
   const [style, setStyle] = useState<string>("simples");
   const [custom, setCustom] = useState("");
   const [title, setTitle] = useState("");
   const [busy, setBusy] = useState(false);
+  const [pdfId, setPdfId] = useState<string | null>(null);
+  const [addTarget, setAddTarget] = useState<BookRow | null>(null);
+  const [addScope, setAddScope] = useState<StudyScope>({ ...emptyScope, scope: "selected" });
+  const [addInstruction, setAddInstruction] = useState("");
+  const [adding, setAdding] = useState(false);
 
   const books = useQuery({
     queryKey: ["books"],
