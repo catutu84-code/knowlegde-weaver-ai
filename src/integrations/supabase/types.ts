@@ -78,11 +78,13 @@ export type Database = {
           created_at: string
           id: string
           position: number
+          source_refs: Json
           style: string | null
           summary: string | null
           title: string
           updated_at: string
           user_id: string
+          version: number
         }
         Insert: {
           book_id: string
@@ -90,11 +92,13 @@ export type Database = {
           created_at?: string
           id?: string
           position: number
+          source_refs?: Json
           style?: string | null
           summary?: string | null
           title: string
           updated_at?: string
           user_id: string
+          version?: number
         }
         Update: {
           book_id?: string
@@ -102,11 +106,13 @@ export type Database = {
           created_at?: string
           id?: string
           position?: number
+          source_refs?: Json
           style?: string | null
           summary?: string | null
           title?: string
           updated_at?: string
           user_id?: string
+          version?: number
         }
         Relationships: [
           {
@@ -159,19 +165,86 @@ export type Database = {
           },
         ]
       }
+      book_versions: {
+        Row: {
+          book_id: string
+          chapters_snapshot: Json
+          created_at: string
+          custom_instruction: string | null
+          id: string
+          material_ids: string[]
+          outline: Json
+          reason: string
+          sources: Json
+          style: string
+          subtitle: string | null
+          title: string
+          user_id: string
+          version: number
+        }
+        Insert: {
+          book_id: string
+          chapters_snapshot?: Json
+          created_at?: string
+          custom_instruction?: string | null
+          id?: string
+          material_ids?: string[]
+          outline?: Json
+          reason?: string
+          sources?: Json
+          style: string
+          subtitle?: string | null
+          title: string
+          user_id: string
+          version: number
+        }
+        Update: {
+          book_id?: string
+          chapters_snapshot?: Json
+          created_at?: string
+          custom_instruction?: string | null
+          id?: string
+          material_ids?: string[]
+          outline?: Json
+          reason?: string
+          sources?: Json
+          style?: string
+          subtitle?: string | null
+          title?: string
+          user_id?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "book_versions_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       books: {
         Row: {
           course_id: string | null
           created_at: string
           current_chapter: number
+          current_page: number
+          current_version: number
           custom_instruction: string | null
+          generation_error: string | null
+          generation_stage: string | null
+          generation_status: string
           id: string
+          introduction: string | null
           material_ids: string[]
           outline: Json
+          reading_progress: number
           scope: string
           sources: Json
           style: string
           subject_id: string | null
+          subtitle: string | null
           title: string
           topic_id: string | null
           total_chapters: number
@@ -182,14 +255,22 @@ export type Database = {
           course_id?: string | null
           created_at?: string
           current_chapter?: number
+          current_page?: number
+          current_version?: number
           custom_instruction?: string | null
+          generation_error?: string | null
+          generation_stage?: string | null
+          generation_status?: string
           id?: string
+          introduction?: string | null
           material_ids?: string[]
           outline?: Json
+          reading_progress?: number
           scope?: string
           sources?: Json
           style?: string
           subject_id?: string | null
+          subtitle?: string | null
           title: string
           topic_id?: string | null
           total_chapters?: number
@@ -200,14 +281,22 @@ export type Database = {
           course_id?: string | null
           created_at?: string
           current_chapter?: number
+          current_page?: number
+          current_version?: number
           custom_instruction?: string | null
+          generation_error?: string | null
+          generation_stage?: string | null
+          generation_status?: string
           id?: string
+          introduction?: string | null
           material_ids?: string[]
           outline?: Json
+          reading_progress?: number
           scope?: string
           sources?: Json
           style?: string
           subject_id?: string | null
+          subtitle?: string | null
           title?: string
           topic_id?: string | null
           total_chapters?: number
