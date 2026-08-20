@@ -79,25 +79,46 @@ export async function callAI(
   const apiKey = process.env["LOVABLE_API_KEY"];
   if (!apiKey) throw new Error("IA indisponível no momento. Tente novamente mais tarde.");
 
-  const res = await fetch(GATEWAY, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: options?.model ?? DEFAULT_MODEL,
-      messages,
-      temperature: options?.temperature ?? 0.6,
-    }),
-  });
+  let res: Response | null = null;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    res = await fetch(GATEWAY, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: options?.model ?? DEFAULT_MODEL,
+        messages,
+        temperature: options?.temperature ?? 0.6,
+      }),
+    });
+    if (res.ok) break;
+    if (res.status !== 429 && res.status < 500) break;
+    if (attempt === 2) break;
+    const retryAfter = Number(res.headers.get("Retry-After"));
+    const waitMs = Number.isFinite(retryAfter) && retryAfter > 0
+      ? retryAfter * 1000
+      : 800 * 2 ** attempt + Math.floor(Math.random() * 250);
+    await new Promise((resolve) => setTimeout(resolve, waitMs));
+  }
 
-  if (res.status === 429) throw new Error("Muitas solicitações à IA. Aguarde alguns segundos e tente de novo.");
-  if (res.status === 402) throw new Error("Os créditos de IA do espaço de trabalho acabaram.");
+  if (!res) throw new Error("A IA não respondeu.");
   if (!res.ok) {
-    const detail = await res.text();
-    console.error("AI gateway error", res.status, detail);
-    throw new Error("A IA não conseguiu responder agora. Tente novamente.");
+    const raw = await res.text();
+    let message = raw;
+    try {
+      const payload = JSON.parse(raw) as { message?: string; error?: { message?: string } };
+      message = payload.message ?? payload.error?.message ?? raw;
+    } catch {
+      // The gateway may return plain text.
+    }
+    console.error("AI gateway error", res.status, raw);
+    if (res.status === 401) throw new Error("A IA não está configurada corretamente.");
+    if (res.status === 400) throw new Error(message || "O pedido enviado à IA é inválido.");
+    if (res.status === 402 || res.status === 403) throw new Error(message || "A IA está bloqueada neste espaço de trabalho.");
+    if (res.status === 429) throw new Error(message || "Muitas solicitações à IA. Aguarde e tente novamente.");
+    throw new Error(message || "A IA não conseguiu responder agora. Tente novamente.");
   }
 
   const json = (await res.json()) as {
