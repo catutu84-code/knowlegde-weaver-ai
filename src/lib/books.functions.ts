@@ -22,7 +22,7 @@ export const createBook = createServerFn({ method: "POST" })
     const { buildContext } = await import("./ai.server");
     const { generateCompleteBook } = await import("./books.server");
     const ctx = await buildContext(context.supabase, data);
-    if (!ctx.text) throw new Error("Nenhum material processado foi encontrado para essa seleção.");
+    if (!ctx.text) throw new Error("Nenhum material processado foi encontrado para essa seleção. Envie um arquivo na aba Upload ou escolha materiais com status "Pronto".");
 
     const generated = await generateCompleteBook({
       contextText: ctx.text,

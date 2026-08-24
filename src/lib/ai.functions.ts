@@ -33,7 +33,7 @@ export const generateExplanation = createServerFn({ method: "POST" })
     const { buildContext, callAI, BASE_SYSTEM } = await import("./ai.server");
     const ctx = await buildContext(context.supabase, data);
     if (!ctx.text) {
-      throw new Error("Nenhum material processado foi encontrado para essa seleção.");
+      throw new Error("Nenhum material processado foi encontrado para essa seleção. Envie um arquivo na aba Upload ou escolha materiais com status "Pronto".");
     }
 
     const instructions: Record<string, string> = {
@@ -114,7 +114,7 @@ export const generateQuiz = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { buildContext, callAI, parseJson, BASE_SYSTEM } = await import("./ai.server");
     const ctx = await buildContext(context.supabase, data);
-    if (!ctx.text) throw new Error("Nenhum material processado foi encontrado para essa seleção.");
+    if (!ctx.text) throw new Error("Nenhum material processado foi encontrado para essa seleção. Envie um arquivo na aba Upload ou escolha materiais com status "Pronto".");
 
     const raw = await callAI(
       [
@@ -333,7 +333,7 @@ export const generateFlashcards = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { buildContext, callAI, parseJson, BASE_SYSTEM } = await import("./ai.server");
     const ctx = await buildContext(context.supabase, data);
-    if (!ctx.text) throw new Error("Nenhum material processado foi encontrado para essa seleção.");
+    if (!ctx.text) throw new Error("Nenhum material processado foi encontrado para essa seleção. Envie um arquivo na aba Upload ou escolha materiais com status "Pronto".");
 
     const raw = await callAI(
       [
@@ -385,7 +385,7 @@ export const generateMindMap = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { buildContext, callAI, parseJson, BASE_SYSTEM } = await import("./ai.server");
     const ctx = await buildContext(context.supabase, data);
-    if (!ctx.text) throw new Error("Nenhum material processado foi encontrado para essa seleção.");
+    if (!ctx.text) throw new Error("Nenhum material processado foi encontrado para essa seleção. Envie um arquivo na aba Upload ou escolha materiais com status "Pronto".");
 
     const raw = await callAI(
       [
