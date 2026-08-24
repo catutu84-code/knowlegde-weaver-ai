@@ -10,7 +10,7 @@ import { addContentToBook, createBook } from "@/lib/books.functions";
 import { BOOK_STYLES } from "@/lib/book-styles";
 import { downloadBookPdf } from "@/lib/book-pdf";
 import { PageHeader } from "@/components/study/PageHeader";
-import { ScopePicker, emptyScope, type StudyScope } from "@/components/study/ScopePicker";
+import { ScopePicker, emptyScope, type StudyScope, validateScope } from "@/components/study/ScopePicker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -84,6 +84,11 @@ function BookHomePage() {
   });
 
   async function handleCreate() {
+    const invalid = validateScope(scope);
+    if (invalid) {
+      toast.error(invalid);
+      return;
+    }
     setBusy(true);
     try {
       const result = await create({
@@ -155,6 +160,11 @@ function BookHomePage() {
 
   async function handleAddContent() {
     if (!addTarget) return;
+    const invalid = validateScope(addScope);
+    if (invalid) {
+      toast.error(invalid);
+      return;
+    }
     setAdding(true);
     try {
       const result = await addToBook({

@@ -22,6 +22,18 @@ export const emptyScope: StudyScope = {
   materialIds: [],
 };
 
+/** Returns an error message when the scope cannot produce any material. */
+export function validateScope(value: StudyScope): string | null {
+  if (value.scope === "material" || value.scope === "selected") {
+    if (value.materialIds.length === 0) return "Selecione ao menos um material processado.";
+    return null;
+  }
+  if (value.scope === "topic" && !value.topicId) return "Escolha um assunto ou selecione materiais.";
+  if (value.scope === "subject" && !value.subjectId) return "Escolha uma matéria ou selecione materiais.";
+  if (value.scope === "course" && !value.courseId) return "Escolha um curso ou selecione materiais.";
+  return null;
+}
+
 export function scopeLabel(
   value: StudyScope,
   names: { course?: string | undefined; subject?: string | undefined; topic?: string | undefined },
