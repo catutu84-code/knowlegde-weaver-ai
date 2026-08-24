@@ -49,9 +49,9 @@ export type GeneratedChapter = {
 export async function generateCompleteBook(input: {
   contextText: string;
   sourceTitles: string[];
-  requestedTitle?: string;
+  requestedTitle?: string | undefined;
   style: string;
-  customInstruction?: string | null;
+  customInstruction?: string | null | undefined;
 }) {
   const { callAI, parseJson, BASE_SYSTEM } = await import("./ai.server");
   const sourceList = input.sourceTitles.map((title) => `- ${title}`).join("\n");
