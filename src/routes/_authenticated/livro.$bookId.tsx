@@ -42,9 +42,9 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/_authenticated/livro/$bookId")({
   head: () => ({
     meta: [
-      { title: "Leitura inteligente — Mentor IA" },
+      { title: "Leitura inteligente — Tutor IA Catoala" },
       { name: "description", content: "Leia seu material como um livro digital paginado, capítulo por capítulo." },
-      { property: "og:title", content: "Leitura inteligente — Mentor IA" },
+      { property: "og:title", content: "Leitura inteligente — Tutor IA Catoala" },
       { property: "og:description", content: "Capa, sumário, capítulos paginados e dúvidas explicadas pela IA." },
       { property: "og:type", content: "article" },
       { name: "twitter:card", content: "summary" },
@@ -353,7 +353,7 @@ function BookReaderPage() {
             <h1 className="text-2xl font-semibold leading-tight sm:text-3xl">{b.title}</h1>
             <p className="text-sm text-muted-foreground">Estilo de explicação: {styleLabel}</p>
             <p className="text-xs text-muted-foreground">
-              {total} capítulos · {written} já escritos · Mentor IA
+              {total} capítulos · {written} já escritos · Tutor IA Catoala
             </p>
           </div>
           <div className="flex flex-col gap-2 border-t border-border p-5 sm:flex-row sm:flex-wrap">
