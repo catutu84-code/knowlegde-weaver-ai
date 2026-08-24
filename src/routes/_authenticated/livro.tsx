@@ -84,6 +84,11 @@ function BookHomePage() {
   });
 
   async function handleCreate() {
+    const invalid = validateScope(scope);
+    if (invalid) {
+      toast.error(invalid);
+      return;
+    }
     setBusy(true);
     try {
       const result = await create({
