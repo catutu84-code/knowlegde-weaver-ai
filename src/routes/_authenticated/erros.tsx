@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 export const Route = createFileRoute("/_authenticated/erros")({
   head: () => ({
     meta: [
-      { title: "Caderno de erros — Mentor IA" },
+      { title: "Caderno de erros — Tutor IA Catoala" },
       { name: "description", content: "Todos os seus erros registrados, com explicação e revisão inteligente." },
     ],
   }),

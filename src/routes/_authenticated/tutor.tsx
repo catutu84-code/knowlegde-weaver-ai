@@ -14,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 export const Route = createFileRoute("/_authenticated/tutor")({
   head: () => ({
     meta: [
-      { title: "Tutor IA — Mentor IA" },
+      { title: "Tutor IA — Tutor IA Catoala" },
       { name: "description", content: "Tire dúvidas em conversa, sempre com base nos seus materiais." },
     ],
   }),

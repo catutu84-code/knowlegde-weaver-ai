@@ -23,7 +23,7 @@ import {
 export const Route = createFileRoute("/_authenticated/simulados")({
   head: () => ({
     meta: [
-      { title: "Simulados — Mentor IA" },
+      { title: "Simulados — Tutor IA Catoala" },
       { name: "description", content: "Simulados completos sem feedback imediato, com resultado detalhado no final." },
     ],
   }),

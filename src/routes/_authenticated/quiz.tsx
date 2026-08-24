@@ -23,7 +23,7 @@ import {
 export const Route = createFileRoute("/_authenticated/quiz")({
   head: () => ({
     meta: [
-      { title: "Quiz — Mentor IA" },
+      { title: "Quiz — Tutor IA Catoala" },
       { name: "description", content: "Gere quizzes personalizados a partir dos seus próprios materiais." },
     ],
   }),

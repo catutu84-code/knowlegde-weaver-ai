@@ -29,12 +29,12 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/_authenticated/livro")({
   head: () => ({
     meta: [
-      { title: "Modo Livro — Mentor IA" },
+      { title: "Modo Livro — Tutor IA Catoala" },
       {
         name: "description",
         content: "Transforme seus materiais em um livro didático personalizado criado pela IA.",
       },
-      { property: "og:title", content: "Modo Livro — Mentor IA" },
+      { property: "og:title", content: "Modo Livro — Tutor IA Catoala" },
       {
         property: "og:description",
         content: "Leitura inteligente capítulo por capítulo, no seu estilo de explicação.",

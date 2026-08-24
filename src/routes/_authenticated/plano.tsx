@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 export const Route = createFileRoute("/_authenticated/plano")({
   head: () => ({
     meta: [
-      { title: "Plano de estudos — Mentor IA" },
+      { title: "Plano de estudos — Tutor IA Catoala" },
       { name: "description", content: "Um plano diário criado pela IA a partir do seu histórico e dos seus erros." },
     ],
   }),

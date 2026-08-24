@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/_authenticated/comunidade")({
   head: () => ({
     meta: [
-      { title: "Comunidade — Mentor IA" },
+      { title: "Comunidade — Tutor IA Catoala" },
       { name: "description", content: "Materiais compartilhados por outros estudantes da plataforma." },
     ],
   }),

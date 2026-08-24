@@ -87,7 +87,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: (() => void) | undefined 
     <div className="flex h-full flex-col gap-5 p-4">
       <Link to="/inicio" onClick={onNavigate} className="flex items-center gap-2 px-1">
         <BrainCircuit className="size-6 text-primary" />
-        <span className="font-display text-lg font-bold">Mentor IA</span>
+        <span className="font-display text-lg font-bold">Tutor IA Catoala</span>
       </Link>
 
       <Button asChild size="sm" className="justify-start gap-2">
@@ -161,7 +161,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
           <Link to="/inicio" className="flex items-center gap-2 lg:hidden">
             <BrainCircuit className="size-5 text-primary" />
-            <span className="font-display font-bold">Mentor IA</span>
+            <span className="font-display font-bold">Tutor IA Catoala</span>
           </Link>
 
           <div className="ml-auto flex items-center gap-2">
