@@ -22,7 +22,7 @@ import {
 export const Route = createFileRoute("/_authenticated/revisoes")({
   head: () => ({
     meta: [
-      { title: "Revisões inteligentes — Mentor IA" },
+      { title: "Revisões inteligentes — Tutor IA Catoala" },
       { name: "description", content: "Questões novas focadas exatamente no que você errou." },
     ],
   }),

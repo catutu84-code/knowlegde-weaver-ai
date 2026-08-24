@@ -9,7 +9,7 @@ import { Markdown } from "@/components/study/Markdown";
 export const Route = createFileRoute("/_authenticated/favoritos")({
   head: () => ({
     meta: [
-      { title: "Favoritos — Mentor IA" },
+      { title: "Favoritos — Tutor IA Catoala" },
       { name: "description", content: "Seus resumos, explicações e conteúdos salvos para revisar depois." },
     ],
   }),

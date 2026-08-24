@@ -16,13 +16,13 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Mentor IA — Estude com seus próprios materiais" },
+      { title: "Tutor IA Catoala — Estude com seus próprios materiais" },
       {
         name: "description",
         content:
           "Envie PDFs, slides, planilhas, fotos e anotações. A IA transforma tudo em resumos, quiz, flashcards, mapas mentais e revisões personalizadas.",
       },
-      { property: "og:title", content: "Mentor IA — Estude com seus próprios materiais" },
+      { property: "og:title", content: "Tutor IA Catoala — Estude com seus próprios materiais" },
       {
         property: "og:description",
         content: "Professor particular, gerador de questões e sistema de revisão em um só lugar.",
@@ -55,7 +55,7 @@ function Landing() {
       <header className="mx-auto flex max-w-6xl items-center justify-between px-5 py-6">
         <div className="flex items-center gap-2">
           <BrainCircuit className="size-6 text-primary" />
-          <span className="font-display text-xl font-bold">Mentor IA</span>
+          <span className="font-display text-xl font-bold">Tutor IA Catoala</span>
         </div>
         <Button asChild variant="outline" size="sm">
           <Link to="/auth">Entrar</Link>
@@ -97,7 +97,7 @@ function Landing() {
       </section>
 
       <footer className="border-t border-border py-8 text-center text-xs text-muted-foreground">
-        Mentor IA — estude do seu jeito.
+        Tutor IA Catoala — estude do seu jeito.
       </footer>
     </main>
   );

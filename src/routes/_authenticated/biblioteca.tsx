@@ -32,7 +32,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/_authenticated/biblioteca")({
   head: () => ({
     meta: [
-      { title: "Biblioteca — Mentor IA" },
+      { title: "Biblioteca — Tutor IA Catoala" },
       { name: "description", content: "Organize seus materiais por curso, matéria e assunto." },
     ],
   }),

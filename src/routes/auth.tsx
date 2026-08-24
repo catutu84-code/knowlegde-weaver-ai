@@ -13,12 +13,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Entrar ou criar conta — Mentor IA" },
+      { title: "Entrar ou criar conta — Tutor IA Catoala" },
       {
         name: "description",
-        content: "Acesse sua conta do Mentor IA e continue estudando com seus próprios materiais.",
+        content: "Acesse sua conta do Tutor IA Catoala e continue estudando com seus próprios materiais.",
       },
-      { property: "og:title", content: "Entrar ou criar conta — Mentor IA" },
+      { property: "og:title", content: "Entrar ou criar conta — Tutor IA Catoala" },
       { property: "og:description", content: "Acesse sua conta e estude com inteligência artificial." },
     ],
   }),
@@ -116,7 +116,7 @@ function AuthPage() {
       <div className="w-full max-w-md">
         <Link to="/" className="mb-8 flex items-center justify-center gap-2">
           <BrainCircuit className="size-7 text-primary" />
-          <span className="font-display text-2xl font-bold">Mentor IA</span>
+          <span className="font-display text-2xl font-bold">Tutor IA Catoala</span>
         </Link>
 
         <div className="surface p-6 sm:p-8">

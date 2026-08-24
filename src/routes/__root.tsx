@@ -79,13 +79,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Mentor IA — Plataforma inteligente de estudos" },
+      { title: "Tutor IA Catoala — Plataforma inteligente de estudos" },
       {
         name: "description",
         content:
           "Envie seus materiais e transforme-os em resumos, quiz, flashcards, mapas mentais e revisões com inteligência artificial.",
       },
-      { property: "og:title", content: "Mentor IA — Plataforma inteligente de estudos" },
+      { property: "og:title", content: "Tutor IA Catoala — Plataforma inteligente de estudos" },
       {
         property: "og:description",
         content: "Seu professor particular com IA: resumos, quiz, flashcards e revisões dos seus próprios materiais.",

@@ -11,7 +11,7 @@ import { Progress } from "@/components/ui/progress";
 export const Route = createFileRoute("/_authenticated/desempenho")({
   head: () => ({
     meta: [
-      { title: "Meu desempenho — Mentor IA" },
+      { title: "Meu desempenho — Tutor IA Catoala" },
       { name: "description", content: "Acompanhe evolução, acertos, tempo de estudo e pontos fracos." },
     ],
   }),

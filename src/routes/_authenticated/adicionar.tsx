@@ -27,7 +27,7 @@ import {
 export const Route = createFileRoute("/_authenticated/adicionar")({
   head: () => ({
     meta: [
-      { title: "Adicionar material — Mentor IA" },
+      { title: "Adicionar material — Tutor IA Catoala" },
       { name: "description", content: "Envie PDFs, Word, Excel, slides, imagens, links ou texto para estudar com IA." },
     ],
   }),

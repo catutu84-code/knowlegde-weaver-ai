@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/_authenticated/flashcards")({
   head: () => ({
     meta: [
-      { title: "Flashcards — Mentor IA" },
+      { title: "Flashcards — Tutor IA Catoala" },
       { name: "description", content: "Revise com flashcards inteligentes criados dos seus materiais." },
     ],
   }),

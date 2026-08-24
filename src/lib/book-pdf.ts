@@ -74,7 +74,7 @@ export function buildBookPdf(book: {
   doc.text(`Estilo de explicação: ${book.styleLabel}`, W / 2, ty + 18, { align: "center" });
   doc.setFontSize(11);
   doc.setTextColor(190);
-  doc.text("Livro digital gerado pelo Mentor IA", W / 2, H - 70, { align: "center" });
+  doc.text("Livro digital gerado pelo Tutor IA Catoala", W / 2, H - 70, { align: "center" });
   doc.text(new Date().toLocaleDateString("pt-BR"), W / 2, H - 52, { align: "center" });
   doc.setTextColor(20);
 

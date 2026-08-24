@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 export const Route = createFileRoute("/_authenticated/mapas")({
   head: () => ({
     meta: [
-      { title: "Mapas mentais — Mentor IA" },
+      { title: "Mapas mentais — Tutor IA Catoala" },
       { name: "description", content: "Visualize o conteúdo em mapas mentais hierárquicos gerados por IA." },
     ],
   }),

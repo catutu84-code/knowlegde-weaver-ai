@@ -22,7 +22,7 @@ import {
 export const Route = createFileRoute("/_authenticated/configuracoes")({
   head: () => ({
     meta: [
-      { title: "Configurações — Mentor IA" },
+      { title: "Configurações — Tutor IA Catoala" },
       { name: "description", content: "Ajuste seu perfil, objetivo de estudo e meta semanal." },
     ],
   }),
