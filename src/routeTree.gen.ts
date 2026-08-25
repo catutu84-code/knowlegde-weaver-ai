@@ -23,6 +23,7 @@ import { Route as AuthenticatedFlashcardsRouteImport } from './routes/_authentic
 import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
 import { Route as AuthenticatedLivroRouteImport } from './routes/_authenticated/livro'
 import { Route as AuthenticatedMapasRouteImport } from './routes/_authenticated/mapas'
+import { Route as AuthenticatedPausaRouteImport } from './routes/_authenticated/pausa'
 import { Route as AuthenticatedPlanoRouteImport } from './routes/_authenticated/plano'
 import { Route as AuthenticatedQuizRouteImport } from './routes/_authenticated/quiz'
 import { Route as AuthenticatedRevisoesRouteImport } from './routes/_authenticated/revisoes'
@@ -103,6 +104,11 @@ const AuthenticatedMapasRoute = AuthenticatedMapasRouteImport.update({
   path: '/mapas',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPausaRoute = AuthenticatedPausaRouteImport.update({
+  id: '/pausa',
+  path: '/pausa',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPlanoRoute = AuthenticatedPlanoRouteImport.update({
   id: '/plano',
   path: '/plano',
@@ -165,6 +171,7 @@ export interface FileRoutesByFullPath {
   '/inicio': typeof AuthenticatedInicioRoute
   '/livro': typeof AuthenticatedLivroRouteWithChildren
   '/mapas': typeof AuthenticatedMapasRoute
+  '/pausa': typeof AuthenticatedPausaRoute
   '/plano': typeof AuthenticatedPlanoRoute
   '/quiz': typeof AuthenticatedQuizRoute
   '/revisoes': typeof AuthenticatedRevisoesRoute
@@ -189,6 +196,7 @@ export interface FileRoutesByTo {
   '/inicio': typeof AuthenticatedInicioRoute
   '/livro': typeof AuthenticatedLivroRouteWithChildren
   '/mapas': typeof AuthenticatedMapasRoute
+  '/pausa': typeof AuthenticatedPausaRoute
   '/plano': typeof AuthenticatedPlanoRoute
   '/quiz': typeof AuthenticatedQuizRoute
   '/revisoes': typeof AuthenticatedRevisoesRoute
@@ -215,6 +223,7 @@ export interface FileRoutesById {
   '/_authenticated/inicio': typeof AuthenticatedInicioRoute
   '/_authenticated/livro': typeof AuthenticatedLivroRouteWithChildren
   '/_authenticated/mapas': typeof AuthenticatedMapasRoute
+  '/_authenticated/pausa': typeof AuthenticatedPausaRoute
   '/_authenticated/plano': typeof AuthenticatedPlanoRoute
   '/_authenticated/quiz': typeof AuthenticatedQuizRoute
   '/_authenticated/revisoes': typeof AuthenticatedRevisoesRoute
@@ -241,6 +250,7 @@ export interface FileRouteTypes {
     | '/inicio'
     | '/livro'
     | '/mapas'
+    | '/pausa'
     | '/plano'
     | '/quiz'
     | '/revisoes'
@@ -265,6 +275,7 @@ export interface FileRouteTypes {
     | '/inicio'
     | '/livro'
     | '/mapas'
+    | '/pausa'
     | '/plano'
     | '/quiz'
     | '/revisoes'
@@ -290,6 +301,7 @@ export interface FileRouteTypes {
     | '/_authenticated/inicio'
     | '/_authenticated/livro'
     | '/_authenticated/mapas'
+    | '/_authenticated/pausa'
     | '/_authenticated/plano'
     | '/_authenticated/quiz'
     | '/_authenticated/revisoes'
@@ -408,6 +420,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMapasRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/pausa': {
+      id: '/_authenticated/pausa'
+      path: '/pausa'
+      fullPath: '/pausa'
+      preLoaderRoute: typeof AuthenticatedPausaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/plano': {
       id: '/_authenticated/plano'
       path: '/plano'
@@ -497,6 +516,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
   AuthenticatedLivroRoute: typeof AuthenticatedLivroRouteWithChildren
   AuthenticatedMapasRoute: typeof AuthenticatedMapasRoute
+  AuthenticatedPausaRoute: typeof AuthenticatedPausaRoute
   AuthenticatedPlanoRoute: typeof AuthenticatedPlanoRoute
   AuthenticatedQuizRoute: typeof AuthenticatedQuizRoute
   AuthenticatedRevisoesRoute: typeof AuthenticatedRevisoesRoute
@@ -518,6 +538,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedInicioRoute: AuthenticatedInicioRoute,
   AuthenticatedLivroRoute: AuthenticatedLivroRouteWithChildren,
   AuthenticatedMapasRoute: AuthenticatedMapasRoute,
+  AuthenticatedPausaRoute: AuthenticatedPausaRoute,
   AuthenticatedPlanoRoute: AuthenticatedPlanoRoute,
   AuthenticatedQuizRoute: AuthenticatedQuizRoute,
   AuthenticatedRevisoesRoute: AuthenticatedRevisoesRoute,
