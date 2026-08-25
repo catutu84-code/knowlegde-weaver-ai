@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          code: string
+          earned_at: string
+          id: string
+          label: string
+          user_id: string
+        }
+        Insert: {
+          code: string
+          earned_at?: string
+          id?: string
+          label: string
+          user_id: string
+        }
+        Update: {
+          code?: string
+          earned_at?: string
+          id?: string
+          label?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       ai_outputs: {
         Row: {
           content: string | null
@@ -430,6 +454,47 @@ export type Database = {
         }
         Relationships: []
       }
+      exams: {
+        Row: {
+          created_at: string
+          exam_date: string
+          id: string
+          notes: string | null
+          subject_id: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          exam_date: string
+          id?: string
+          notes?: string | null
+          subject_id?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          exam_date?: string
+          id?: string
+          notes?: string | null
+          subject_id?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exams_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       favorites: {
         Row: {
           created_at: string
@@ -763,6 +828,105 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          body: string
+          created_at: string
+          dedupe_key: string | null
+          id: string
+          kind: string
+          link: string | null
+          read_at: string | null
+          scheduled_for: string
+          sent_at: string | null
+          snoozed_until: string | null
+          status: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          dedupe_key?: string | null
+          id?: string
+          kind: string
+          link?: string | null
+          read_at?: string | null
+          scheduled_for?: string
+          sent_at?: string | null
+          snoozed_until?: string | null
+          status?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          dedupe_key?: string | null
+          id?: string
+          kind?: string
+          link?: string | null
+          read_at?: string | null
+          scheduled_for?: string
+          sent_at?: string | null
+          snoozed_until?: string | null
+          status?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      pause_consent: {
+        Row: {
+          consented_at: string | null
+          created_at: string
+          id: string
+          keep_journal: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          consented_at?: string | null
+          created_at?: string
+          id?: string
+          keep_journal?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          consented_at?: string | null
+          created_at?: string
+          id?: string
+          keep_journal?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      pause_journal: {
+        Row: {
+          created_at: string
+          entry: string
+          id: string
+          mood: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          entry: string
+          id?: string
+          mood?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          entry?: string
+          id?: string
+          mood?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -772,6 +936,7 @@ export type Database = {
           id: string
           last_study_date: string | null
           streak: number
+          teach_prefs: Json
           updated_at: string
           user_id: string
           weekly_goal_minutes: number
@@ -785,6 +950,7 @@ export type Database = {
           id?: string
           last_study_date?: string | null
           streak?: number
+          teach_prefs?: Json
           updated_at?: string
           user_id: string
           weekly_goal_minutes?: number
@@ -798,10 +964,41 @@ export type Database = {
           id?: string
           last_study_date?: string | null
           streak?: number
+          teach_prefs?: Json
           updated_at?: string
           user_id?: string
           weekly_goal_minutes?: number
           xp?: number
+        }
+        Relationships: []
+      }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          p256dh: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          p256dh: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          p256dh?: string
+          user_agent?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -1021,6 +1218,60 @@ export type Database = {
           data?: Json
           id?: string
           plan_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      study_rhythm: {
+        Row: {
+          created_at: string
+          days_per_week: number
+          goal: string | null
+          id: string
+          max_per_day: number
+          minutes_per_day: number
+          notifications_enabled: boolean
+          onboarded: boolean
+          preferred_times: string[]
+          quiet_end: string
+          quiet_start: string
+          subjects: string[]
+          timezone: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          days_per_week?: number
+          goal?: string | null
+          id?: string
+          max_per_day?: number
+          minutes_per_day?: number
+          notifications_enabled?: boolean
+          onboarded?: boolean
+          preferred_times?: string[]
+          quiet_end?: string
+          quiet_start?: string
+          subjects?: string[]
+          timezone?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          days_per_week?: number
+          goal?: string | null
+          id?: string
+          max_per_day?: number
+          minutes_per_day?: number
+          notifications_enabled?: boolean
+          onboarded?: boolean
+          preferred_times?: string[]
+          quiet_end?: string
+          quiet_start?: string
+          subjects?: string[]
+          timezone?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []

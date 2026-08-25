@@ -23,13 +23,16 @@ import { Route as AuthenticatedFlashcardsRouteImport } from './routes/_authentic
 import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
 import { Route as AuthenticatedLivroRouteImport } from './routes/_authenticated/livro'
 import { Route as AuthenticatedMapasRouteImport } from './routes/_authenticated/mapas'
+import { Route as AuthenticatedPausaRouteImport } from './routes/_authenticated/pausa'
 import { Route as AuthenticatedPlanoRouteImport } from './routes/_authenticated/plano'
 import { Route as AuthenticatedQuizRouteImport } from './routes/_authenticated/quiz'
 import { Route as AuthenticatedRevisoesRouteImport } from './routes/_authenticated/revisoes'
+import { Route as AuthenticatedRitmoRouteImport } from './routes/_authenticated/ritmo'
 import { Route as AuthenticatedSimuladosRouteImport } from './routes/_authenticated/simulados'
 import { Route as AuthenticatedTutorRouteImport } from './routes/_authenticated/tutor'
 import { Route as AuthenticatedLivroBookIdRouteImport } from './routes/_authenticated/livro.$bookId'
 import { Route as AuthenticatedMaterialMaterialIdRouteImport } from './routes/_authenticated/material.$materialId'
+import { Route as ApiPublicNotifyCronRouteImport } from './routes/api/public/notify-cron'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -101,6 +104,11 @@ const AuthenticatedMapasRoute = AuthenticatedMapasRouteImport.update({
   path: '/mapas',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPausaRoute = AuthenticatedPausaRouteImport.update({
+  id: '/pausa',
+  path: '/pausa',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPlanoRoute = AuthenticatedPlanoRouteImport.update({
   id: '/plano',
   path: '/plano',
@@ -114,6 +122,11 @@ const AuthenticatedQuizRoute = AuthenticatedQuizRouteImport.update({
 const AuthenticatedRevisoesRoute = AuthenticatedRevisoesRouteImport.update({
   id: '/revisoes',
   path: '/revisoes',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedRitmoRoute = AuthenticatedRitmoRouteImport.update({
+  id: '/ritmo',
+  path: '/ritmo',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedSimuladosRoute = AuthenticatedSimuladosRouteImport.update({
@@ -138,6 +151,11 @@ const AuthenticatedMaterialMaterialIdRoute =
     path: '/material/$materialId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicNotifyCronRoute = ApiPublicNotifyCronRouteImport.update({
+  id: '/api/public/notify-cron',
+  path: '/api/public/notify-cron',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -153,13 +171,16 @@ export interface FileRoutesByFullPath {
   '/inicio': typeof AuthenticatedInicioRoute
   '/livro': typeof AuthenticatedLivroRouteWithChildren
   '/mapas': typeof AuthenticatedMapasRoute
+  '/pausa': typeof AuthenticatedPausaRoute
   '/plano': typeof AuthenticatedPlanoRoute
   '/quiz': typeof AuthenticatedQuizRoute
   '/revisoes': typeof AuthenticatedRevisoesRoute
+  '/ritmo': typeof AuthenticatedRitmoRoute
   '/simulados': typeof AuthenticatedSimuladosRoute
   '/tutor': typeof AuthenticatedTutorRoute
   '/livro/$bookId': typeof AuthenticatedLivroBookIdRoute
   '/material/$materialId': typeof AuthenticatedMaterialMaterialIdRoute
+  '/api/public/notify-cron': typeof ApiPublicNotifyCronRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -175,13 +196,16 @@ export interface FileRoutesByTo {
   '/inicio': typeof AuthenticatedInicioRoute
   '/livro': typeof AuthenticatedLivroRouteWithChildren
   '/mapas': typeof AuthenticatedMapasRoute
+  '/pausa': typeof AuthenticatedPausaRoute
   '/plano': typeof AuthenticatedPlanoRoute
   '/quiz': typeof AuthenticatedQuizRoute
   '/revisoes': typeof AuthenticatedRevisoesRoute
+  '/ritmo': typeof AuthenticatedRitmoRoute
   '/simulados': typeof AuthenticatedSimuladosRoute
   '/tutor': typeof AuthenticatedTutorRoute
   '/livro/$bookId': typeof AuthenticatedLivroBookIdRoute
   '/material/$materialId': typeof AuthenticatedMaterialMaterialIdRoute
+  '/api/public/notify-cron': typeof ApiPublicNotifyCronRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -199,13 +223,16 @@ export interface FileRoutesById {
   '/_authenticated/inicio': typeof AuthenticatedInicioRoute
   '/_authenticated/livro': typeof AuthenticatedLivroRouteWithChildren
   '/_authenticated/mapas': typeof AuthenticatedMapasRoute
+  '/_authenticated/pausa': typeof AuthenticatedPausaRoute
   '/_authenticated/plano': typeof AuthenticatedPlanoRoute
   '/_authenticated/quiz': typeof AuthenticatedQuizRoute
   '/_authenticated/revisoes': typeof AuthenticatedRevisoesRoute
+  '/_authenticated/ritmo': typeof AuthenticatedRitmoRoute
   '/_authenticated/simulados': typeof AuthenticatedSimuladosRoute
   '/_authenticated/tutor': typeof AuthenticatedTutorRoute
   '/_authenticated/livro/$bookId': typeof AuthenticatedLivroBookIdRoute
   '/_authenticated/material/$materialId': typeof AuthenticatedMaterialMaterialIdRoute
+  '/api/public/notify-cron': typeof ApiPublicNotifyCronRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -223,13 +250,16 @@ export interface FileRouteTypes {
     | '/inicio'
     | '/livro'
     | '/mapas'
+    | '/pausa'
     | '/plano'
     | '/quiz'
     | '/revisoes'
+    | '/ritmo'
     | '/simulados'
     | '/tutor'
     | '/livro/$bookId'
     | '/material/$materialId'
+    | '/api/public/notify-cron'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -245,13 +275,16 @@ export interface FileRouteTypes {
     | '/inicio'
     | '/livro'
     | '/mapas'
+    | '/pausa'
     | '/plano'
     | '/quiz'
     | '/revisoes'
+    | '/ritmo'
     | '/simulados'
     | '/tutor'
     | '/livro/$bookId'
     | '/material/$materialId'
+    | '/api/public/notify-cron'
   id:
     | '__root__'
     | '/'
@@ -268,19 +301,23 @@ export interface FileRouteTypes {
     | '/_authenticated/inicio'
     | '/_authenticated/livro'
     | '/_authenticated/mapas'
+    | '/_authenticated/pausa'
     | '/_authenticated/plano'
     | '/_authenticated/quiz'
     | '/_authenticated/revisoes'
+    | '/_authenticated/ritmo'
     | '/_authenticated/simulados'
     | '/_authenticated/tutor'
     | '/_authenticated/livro/$bookId'
     | '/_authenticated/material/$materialId'
+    | '/api/public/notify-cron'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ApiPublicNotifyCronRoute: typeof ApiPublicNotifyCronRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -383,6 +420,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMapasRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/pausa': {
+      id: '/_authenticated/pausa'
+      path: '/pausa'
+      fullPath: '/pausa'
+      preLoaderRoute: typeof AuthenticatedPausaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/plano': {
       id: '/_authenticated/plano'
       path: '/plano'
@@ -402,6 +446,13 @@ declare module '@tanstack/react-router' {
       path: '/revisoes'
       fullPath: '/revisoes'
       preLoaderRoute: typeof AuthenticatedRevisoesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/ritmo': {
+      id: '/_authenticated/ritmo'
+      path: '/ritmo'
+      fullPath: '/ritmo'
+      preLoaderRoute: typeof AuthenticatedRitmoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/simulados': {
@@ -432,6 +483,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMaterialMaterialIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/notify-cron': {
+      id: '/api/public/notify-cron'
+      path: '/api/public/notify-cron'
+      fullPath: '/api/public/notify-cron'
+      preLoaderRoute: typeof ApiPublicNotifyCronRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -458,9 +516,11 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
   AuthenticatedLivroRoute: typeof AuthenticatedLivroRouteWithChildren
   AuthenticatedMapasRoute: typeof AuthenticatedMapasRoute
+  AuthenticatedPausaRoute: typeof AuthenticatedPausaRoute
   AuthenticatedPlanoRoute: typeof AuthenticatedPlanoRoute
   AuthenticatedQuizRoute: typeof AuthenticatedQuizRoute
   AuthenticatedRevisoesRoute: typeof AuthenticatedRevisoesRoute
+  AuthenticatedRitmoRoute: typeof AuthenticatedRitmoRoute
   AuthenticatedSimuladosRoute: typeof AuthenticatedSimuladosRoute
   AuthenticatedTutorRoute: typeof AuthenticatedTutorRoute
   AuthenticatedMaterialMaterialIdRoute: typeof AuthenticatedMaterialMaterialIdRoute
@@ -478,9 +538,11 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedInicioRoute: AuthenticatedInicioRoute,
   AuthenticatedLivroRoute: AuthenticatedLivroRouteWithChildren,
   AuthenticatedMapasRoute: AuthenticatedMapasRoute,
+  AuthenticatedPausaRoute: AuthenticatedPausaRoute,
   AuthenticatedPlanoRoute: AuthenticatedPlanoRoute,
   AuthenticatedQuizRoute: AuthenticatedQuizRoute,
   AuthenticatedRevisoesRoute: AuthenticatedRevisoesRoute,
+  AuthenticatedRitmoRoute: AuthenticatedRitmoRoute,
   AuthenticatedSimuladosRoute: AuthenticatedSimuladosRoute,
   AuthenticatedTutorRoute: AuthenticatedTutorRoute,
   AuthenticatedMaterialMaterialIdRoute: AuthenticatedMaterialMaterialIdRoute,
@@ -493,6 +555,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ApiPublicNotifyCronRoute: ApiPublicNotifyCronRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

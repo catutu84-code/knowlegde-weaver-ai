@@ -295,20 +295,40 @@ export const askTutor = createServerFn({ method: "POST" })
       subjectId?: string | null;
       topicId?: string | null;
       history: Array<{ role: "user" | "assistant"; content: string }>;
+      prefs?: unknown;
     }) => input,
   )
   .handler(async ({ data, context }) => {
-    const { buildContext, callAI, BASE_SYSTEM } = await import("./ai.server");
-    const ctx = await buildContext(context.supabase, data);
+    const { buildContext, callAI } = await import("./ai.server");
+    const {
+      normalizePrefs,
+      buildTeachingInstructions,
+      buildSourceInstructions,
+      TEACHER_SYSTEM,
+    } = await import("./teach-modes");
+
+    const prefs = normalizePrefs(data.prefs);
+    const needsContext = prefs.sourceMode !== "general";
+    const ctx = needsContext
+      ? await buildContext(context.supabase, data)
+      : { text: "", sources: [] as Array<{ id: string; title: string }> };
 
     const messages: Array<{ role: string; content: unknown }> = [
       {
         role: "system",
-        content: `${BASE_SYSTEM}
+        content: `${TEACHER_SYSTEM}
 
-Você é o Tutor IA. Responda de forma conversacional, clara e curta quando possível.
-CONTEÚDO DOS MATERIAIS DO ALUNO:
-${ctx.text || "(nenhum material processado disponível para esta seleção)"}`,
+${buildSourceInstructions(prefs.sourceMode, Boolean(ctx.text))}
+
+${buildTeachingInstructions(prefs)}
+
+${
+  ctx.text
+    ? `MATERIAIS DO ESTUDANTE:\n${ctx.text}`
+    : needsContext
+      ? "MATERIAIS DO ESTUDANTE: (nenhum material processado disponível nesta seleção)"
+      : ""
+}`,
       },
       ...data.history.slice(-10).map((m) => ({ role: m.role, content: m.content })),
       { role: "user", content: data.question },
@@ -317,6 +337,7 @@ ${ctx.text || "(nenhum material processado disponível para esta seleção)"}`,
     const content = await callAI(messages, { temperature: 0.7 });
     return { content, sources: ctx.sources };
   });
+
 
 export const generateFlashcards = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])

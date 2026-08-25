@@ -37,7 +37,7 @@ import { cn } from "@/lib/utils";
 
 const NAV = [
   { to: "/inicio", label: "Início", icon: Home },
-  { to: "/tutor", label: "Tutor IA", icon: Bot },
+  { to: "/tutor", label: "Professora Catoala", icon: Bot },
   { to: "/livro", label: "Modo Livro", icon: BookOpen },
   { to: "/mapas", label: "Mapas Mentais", icon: Network },
   { to: "/quiz", label: "Quiz", icon: Target },
