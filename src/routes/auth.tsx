@@ -120,8 +120,11 @@ function AuthPage() {
           <Link to="/" aria-label="Tutor IA Catoala">
             <Logo />
           </Link>
-          <p className="mt-4 max-w-xs text-sm text-muted-foreground">
-            Sua inteligência para aprender melhor.
+          <p className="mt-5 text-xl font-display font-bold text-foreground">
+            Bem-vinda de volta
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Entre para continuar seus estudos com o Tutor IA.
           </p>
         </div>
 
