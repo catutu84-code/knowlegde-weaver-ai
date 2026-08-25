@@ -26,6 +26,7 @@ import { Route as AuthenticatedMapasRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedPlanoRouteImport } from './routes/_authenticated/plano'
 import { Route as AuthenticatedQuizRouteImport } from './routes/_authenticated/quiz'
 import { Route as AuthenticatedRevisoesRouteImport } from './routes/_authenticated/revisoes'
+import { Route as AuthenticatedRitmoRouteImport } from './routes/_authenticated/ritmo'
 import { Route as AuthenticatedSimuladosRouteImport } from './routes/_authenticated/simulados'
 import { Route as AuthenticatedTutorRouteImport } from './routes/_authenticated/tutor'
 import { Route as AuthenticatedLivroBookIdRouteImport } from './routes/_authenticated/livro.$bookId'
@@ -117,6 +118,11 @@ const AuthenticatedRevisoesRoute = AuthenticatedRevisoesRouteImport.update({
   path: '/revisoes',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRitmoRoute = AuthenticatedRitmoRouteImport.update({
+  id: '/ritmo',
+  path: '/ritmo',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSimuladosRoute = AuthenticatedSimuladosRouteImport.update({
   id: '/simulados',
   path: '/simulados',
@@ -162,6 +168,7 @@ export interface FileRoutesByFullPath {
   '/plano': typeof AuthenticatedPlanoRoute
   '/quiz': typeof AuthenticatedQuizRoute
   '/revisoes': typeof AuthenticatedRevisoesRoute
+  '/ritmo': typeof AuthenticatedRitmoRoute
   '/simulados': typeof AuthenticatedSimuladosRoute
   '/tutor': typeof AuthenticatedTutorRoute
   '/livro/$bookId': typeof AuthenticatedLivroBookIdRoute
@@ -185,6 +192,7 @@ export interface FileRoutesByTo {
   '/plano': typeof AuthenticatedPlanoRoute
   '/quiz': typeof AuthenticatedQuizRoute
   '/revisoes': typeof AuthenticatedRevisoesRoute
+  '/ritmo': typeof AuthenticatedRitmoRoute
   '/simulados': typeof AuthenticatedSimuladosRoute
   '/tutor': typeof AuthenticatedTutorRoute
   '/livro/$bookId': typeof AuthenticatedLivroBookIdRoute
@@ -210,6 +218,7 @@ export interface FileRoutesById {
   '/_authenticated/plano': typeof AuthenticatedPlanoRoute
   '/_authenticated/quiz': typeof AuthenticatedQuizRoute
   '/_authenticated/revisoes': typeof AuthenticatedRevisoesRoute
+  '/_authenticated/ritmo': typeof AuthenticatedRitmoRoute
   '/_authenticated/simulados': typeof AuthenticatedSimuladosRoute
   '/_authenticated/tutor': typeof AuthenticatedTutorRoute
   '/_authenticated/livro/$bookId': typeof AuthenticatedLivroBookIdRoute
@@ -235,6 +244,7 @@ export interface FileRouteTypes {
     | '/plano'
     | '/quiz'
     | '/revisoes'
+    | '/ritmo'
     | '/simulados'
     | '/tutor'
     | '/livro/$bookId'
@@ -258,6 +268,7 @@ export interface FileRouteTypes {
     | '/plano'
     | '/quiz'
     | '/revisoes'
+    | '/ritmo'
     | '/simulados'
     | '/tutor'
     | '/livro/$bookId'
@@ -282,6 +293,7 @@ export interface FileRouteTypes {
     | '/_authenticated/plano'
     | '/_authenticated/quiz'
     | '/_authenticated/revisoes'
+    | '/_authenticated/ritmo'
     | '/_authenticated/simulados'
     | '/_authenticated/tutor'
     | '/_authenticated/livro/$bookId'
@@ -417,6 +429,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRevisoesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/ritmo': {
+      id: '/_authenticated/ritmo'
+      path: '/ritmo'
+      fullPath: '/ritmo'
+      preLoaderRoute: typeof AuthenticatedRitmoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/simulados': {
       id: '/_authenticated/simulados'
       path: '/simulados'
@@ -481,6 +500,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedPlanoRoute: typeof AuthenticatedPlanoRoute
   AuthenticatedQuizRoute: typeof AuthenticatedQuizRoute
   AuthenticatedRevisoesRoute: typeof AuthenticatedRevisoesRoute
+  AuthenticatedRitmoRoute: typeof AuthenticatedRitmoRoute
   AuthenticatedSimuladosRoute: typeof AuthenticatedSimuladosRoute
   AuthenticatedTutorRoute: typeof AuthenticatedTutorRoute
   AuthenticatedMaterialMaterialIdRoute: typeof AuthenticatedMaterialMaterialIdRoute
@@ -501,6 +521,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPlanoRoute: AuthenticatedPlanoRoute,
   AuthenticatedQuizRoute: AuthenticatedQuizRoute,
   AuthenticatedRevisoesRoute: AuthenticatedRevisoesRoute,
+  AuthenticatedRitmoRoute: AuthenticatedRitmoRoute,
   AuthenticatedSimuladosRoute: AuthenticatedSimuladosRoute,
   AuthenticatedTutorRoute: AuthenticatedTutorRoute,
   AuthenticatedMaterialMaterialIdRoute: AuthenticatedMaterialMaterialIdRoute,
