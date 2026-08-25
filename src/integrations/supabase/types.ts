@@ -772,6 +772,7 @@ export type Database = {
           id: string
           last_study_date: string | null
           streak: number
+          teach_prefs: Json
           updated_at: string
           user_id: string
           weekly_goal_minutes: number
@@ -785,6 +786,7 @@ export type Database = {
           id?: string
           last_study_date?: string | null
           streak?: number
+          teach_prefs?: Json
           updated_at?: string
           user_id: string
           weekly_goal_minutes?: number
@@ -798,6 +800,7 @@ export type Database = {
           id?: string
           last_study_date?: string | null
           streak?: number
+          teach_prefs?: Json
           updated_at?: string
           user_id?: string
           weekly_goal_minutes?: number
