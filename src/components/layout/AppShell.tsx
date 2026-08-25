@@ -117,7 +117,7 @@ function SidebarContent({
     <div className="flex h-full flex-col gap-4 p-3 sm:p-4">
       <div className="flex items-center gap-2">
         <Link to="/inicio" onClick={onNavigate} className="min-w-0 flex-1">
-          {collapsed ? <LogoMark className="mx-auto size-8" /> : <Logo />}
+          {collapsed ? <LogoMark className="mx-auto size-8" /> : <Logo compact />}
         </Link>
         {onToggleCollapse ? (
           <Button
