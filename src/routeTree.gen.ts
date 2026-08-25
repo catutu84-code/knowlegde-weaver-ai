@@ -30,6 +30,7 @@ import { Route as AuthenticatedSimuladosRouteImport } from './routes/_authentica
 import { Route as AuthenticatedTutorRouteImport } from './routes/_authenticated/tutor'
 import { Route as AuthenticatedLivroBookIdRouteImport } from './routes/_authenticated/livro.$bookId'
 import { Route as AuthenticatedMaterialMaterialIdRouteImport } from './routes/_authenticated/material.$materialId'
+import { Route as ApiPublicNotifyCronRouteImport } from './routes/api/public/notify-cron'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -138,6 +139,11 @@ const AuthenticatedMaterialMaterialIdRoute =
     path: '/material/$materialId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicNotifyCronRoute = ApiPublicNotifyCronRouteImport.update({
+  id: '/api/public/notify-cron',
+  path: '/api/public/notify-cron',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -160,6 +166,7 @@ export interface FileRoutesByFullPath {
   '/tutor': typeof AuthenticatedTutorRoute
   '/livro/$bookId': typeof AuthenticatedLivroBookIdRoute
   '/material/$materialId': typeof AuthenticatedMaterialMaterialIdRoute
+  '/api/public/notify-cron': typeof ApiPublicNotifyCronRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -182,6 +189,7 @@ export interface FileRoutesByTo {
   '/tutor': typeof AuthenticatedTutorRoute
   '/livro/$bookId': typeof AuthenticatedLivroBookIdRoute
   '/material/$materialId': typeof AuthenticatedMaterialMaterialIdRoute
+  '/api/public/notify-cron': typeof ApiPublicNotifyCronRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -206,6 +214,7 @@ export interface FileRoutesById {
   '/_authenticated/tutor': typeof AuthenticatedTutorRoute
   '/_authenticated/livro/$bookId': typeof AuthenticatedLivroBookIdRoute
   '/_authenticated/material/$materialId': typeof AuthenticatedMaterialMaterialIdRoute
+  '/api/public/notify-cron': typeof ApiPublicNotifyCronRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -230,6 +239,7 @@ export interface FileRouteTypes {
     | '/tutor'
     | '/livro/$bookId'
     | '/material/$materialId'
+    | '/api/public/notify-cron'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -252,6 +262,7 @@ export interface FileRouteTypes {
     | '/tutor'
     | '/livro/$bookId'
     | '/material/$materialId'
+    | '/api/public/notify-cron'
   id:
     | '__root__'
     | '/'
@@ -275,12 +286,14 @@ export interface FileRouteTypes {
     | '/_authenticated/tutor'
     | '/_authenticated/livro/$bookId'
     | '/_authenticated/material/$materialId'
+    | '/api/public/notify-cron'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ApiPublicNotifyCronRoute: typeof ApiPublicNotifyCronRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -432,6 +445,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMaterialMaterialIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/notify-cron': {
+      id: '/api/public/notify-cron'
+      path: '/api/public/notify-cron'
+      fullPath: '/api/public/notify-cron'
+      preLoaderRoute: typeof ApiPublicNotifyCronRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -493,6 +513,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ApiPublicNotifyCronRoute: ApiPublicNotifyCronRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
