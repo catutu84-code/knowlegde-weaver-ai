@@ -1,7 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import {
-  BrainCircuit,
   Upload,
   Sparkles,
   Target,
@@ -11,6 +10,7 @@ import {
 } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
+import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
@@ -53,10 +53,7 @@ function Landing() {
   return (
     <main className="min-h-screen">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-5 py-6">
-        <div className="flex items-center gap-2">
-          <BrainCircuit className="size-6 text-primary" />
-          <span className="font-display text-xl font-bold">Tutor IA Catoala</span>
-        </div>
+<Logo />
         <Button asChild variant="outline" size="sm">
           <Link to="/auth">Entrar</Link>
         </Button>
@@ -87,8 +84,10 @@ function Landing() {
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((f) => (
-            <article key={f.title} className="surface p-5">
-              <f.icon className="size-5 text-primary" />
+            <article key={f.title} className="surface card-hover p-5">
+              <span className="surface-soft inline-flex size-10 items-center justify-center rounded-xl">
+                <f.icon className="size-5 text-primary" />
+              </span>
               <h2 className="mt-3 text-base font-semibold">{f.title}</h2>
               <p className="mt-1 text-sm text-muted-foreground">{f.text}</p>
             </article>
