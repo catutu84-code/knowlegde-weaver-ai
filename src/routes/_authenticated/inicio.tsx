@@ -28,7 +28,7 @@ const quickActions = [
   { to: "/quiz", label: "Fazer Quiz", icon: Target },
   { to: "/mapas", label: "Criar mapa mental", icon: Network },
   { to: "/flashcards", label: "Revisar flashcards", icon: Layers3 },
-  { to: "/tutor", label: "Conversar com Tutor", icon: Bot },
+  { to: "/tutor", label: "Falar com a Professora", icon: Bot },
 ] as const;
 
 function HomePage() {
