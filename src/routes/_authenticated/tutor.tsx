@@ -24,10 +24,14 @@ export const Route = createFileRoute("/_authenticated/tutor")({
 type Message = { role: "user" | "assistant"; content: string };
 
 const SUGGESTIONS = [
-  "Explique esse conteúdo de forma bem simples",
+  "Explique de forma simples",
+  "Explique como uma fofoca",
+  "Transforme em resumo",
+  "Crie um mapa mental",
+  "Crie um quiz",
+  "Crie flashcards",
+  "Me guie por onde começar",
   "Quais são os pontos que mais caem em prova?",
-  "Me dê um exemplo prático disso",
-  "Qual a diferença entre os conceitos principais?",
 ];
 
 function TutorPage() {
@@ -85,7 +89,7 @@ function TutorPage() {
                   <button
                     key={s}
                     onClick={() => send(s)}
-                    className="rounded-full border border-border px-3 py-1.5 text-xs hover:border-primary hover:text-primary"
+                    className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium transition-colors duration-200 hover:border-primary hover:bg-blush-soft hover:text-primary"
                   >
                     {s}
                   </button>
@@ -94,27 +98,39 @@ function TutorPage() {
             </div>
           ) : (
             messages.map((m, i) => (
-              <div key={i} className="flex gap-3">
-                <div className="mt-1 shrink-0">
-                  {m.role === "user" ? (
-                    <User className="size-4 text-muted-foreground" />
-                  ) : (
+              <div
+                key={i}
+                className={m.role === "user" ? "flex justify-end gap-2" : "flex gap-2.5"}
+              >
+                {m.role === "assistant" ? (
+                  <span className="mt-0.5 inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-blush-soft">
                     <Bot className="size-4 text-primary" />
-                  )}
-                </div>
-                <div className="min-w-0 flex-1">
+                  </span>
+                ) : null}
+                <div
+                  className={
+                    m.role === "user"
+                      ? "max-w-[85%] rounded-2xl rounded-tr-sm bg-sky px-3.5 py-2.5 text-sm text-foreground"
+                      : "min-w-0 flex-1 rounded-2xl rounded-tl-sm border border-border bg-card px-3.5 py-2.5"
+                  }
+                >
                   {m.role === "user" ? (
-                    <p className="whitespace-pre-wrap text-sm">{m.content}</p>
+                    <p className="whitespace-pre-wrap">{m.content}</p>
                   ) : (
                     <Markdown content={m.content} />
                   )}
                 </div>
+                {m.role === "user" ? (
+                  <span className="mt-0.5 inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-secondary">
+                    <User className="size-4 text-muted-foreground" />
+                  </span>
+                ) : null}
               </div>
             ))
           )}
           {busy ? (
             <p className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="size-4 animate-spin" /> Pensando...
+              <Loader2 className="size-4 animate-spin text-primary" /> O Tutor IA está analisando seus materiais...
             </p>
           ) : null}
           <div ref={endRef} />

@@ -71,7 +71,7 @@
   --card-foreground: #28324a;
   --popover: #ffffff;
   --popover-foreground: #28324a;
-  --primary: #e996b4;
+  --primary: #d97a9f;
   --primary-foreground: #ffffff;
   --secondary: #f1f9ff;
   --secondary-foreground: #28324a;
@@ -140,6 +140,10 @@
     letter-spacing: -0.02em;
   }
 
+  h1, h2, h3, h4, p, span, li, td, th, label, a, button {
+    overflow-wrap: anywhere;
+  }
+
   :focus-visible {
     outline: 2px solid var(--color-ring);
     outline-offset: 2px;
@@ -168,7 +172,7 @@
 }
 
 @utility text-gradient {
-  background-image: linear-gradient(120deg, #e996b4, #82bfe8);
+  background-image: linear-gradient(120deg, #d4658c, #3f93c9);
   background-clip: text;
   color: transparent;
 }
