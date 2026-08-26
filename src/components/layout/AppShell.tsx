@@ -216,6 +216,15 @@ export function AppShell({ children }: { children: ReactNode }) {
     setCollapsed(window.localStorage.getItem("catoala:sidebar") === "collapsed");
   }, []);
 
+  useEffect(() => {
+    if (!user) return;
+    void registerServiceWorker();
+    const key = `catoala:sync:${new Date().toISOString().slice(0, 13)}`;
+    if (window.sessionStorage.getItem(key)) return;
+    window.sessionStorage.setItem(key, "1");
+    void syncMyNotifications({ data: undefined as never }).catch(() => undefined);
+  }, [user]);
+
   function toggleCollapsed() {
     setCollapsed((prev) => {
       const next = !prev;
