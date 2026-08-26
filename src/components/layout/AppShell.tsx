@@ -23,6 +23,9 @@ import {
   Flame,
   PanelLeftClose,
   PanelLeftOpen,
+  Wand2,
+  Activity,
+  Heart,
 } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
