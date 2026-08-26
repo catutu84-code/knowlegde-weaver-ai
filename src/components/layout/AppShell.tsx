@@ -48,6 +48,8 @@ const NAV = [
   { to: "/erros", label: "Caderno de Erros", icon: XCircle },
   { to: "/revisoes", label: "Revisões", icon: RefreshCw },
   { to: "/desempenho", label: "Meu Progresso", icon: BarChart3 },
+  { to: "/ritmo", label: "Meu Ritmo", icon: Activity },
+  { to: "/pausa", label: "Pausa Catoala", icon: Heart },
   { to: "/plano", label: "Plano de Estudos", icon: CalendarDays },
   { to: "/favoritos", label: "Favoritos", icon: Star },
   { to: "/comunidade", label: "Comunidade", icon: Users },
