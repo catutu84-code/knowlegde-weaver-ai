@@ -31,6 +31,8 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useProfile, useSession, useIsAdmin } from "@/lib/auth";
 import { levelFromXp } from "@/lib/library";
+import { syncMyNotifications } from "@/lib/notifications.functions";
+import { registerServiceWorker } from "@/lib/push";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
