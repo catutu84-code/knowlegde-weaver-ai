@@ -6,12 +6,12 @@ import type { StudioKind } from "./studio";
 type StudioInput = {
   kind: StudioKind;
   scope: "material" | "selected" | "topic" | "subject" | "course";
-  materialIds?: string[];
-  courseId?: string | null;
-  subjectId?: string | null;
-  topicId?: string | null;
-  teachMode?: string;
-  instruction?: string;
+  materialIds?: string[] | undefined;
+  courseId?: string | null | undefined;
+  subjectId?: string | null | undefined;
+  topicId?: string | null | undefined;
+  teachMode?: string | undefined;
+  instruction?: string | undefined;
 };
 
 const RECIPES: Record<StudioKind, string> = {
@@ -57,10 +57,10 @@ export const generateStudioAsset = createServerFn({ method: "POST" })
 
     const ctx = await buildContext(context.supabase, {
       scope: data.scope,
-      materialIds: data.materialIds,
-      courseId: data.courseId,
-      subjectId: data.subjectId,
-      topicId: data.topicId,
+      materialIds: data.materialIds ?? [],
+      courseId: data.courseId ?? null,
+      subjectId: data.subjectId ?? null,
+      topicId: data.topicId ?? null,
     });
     if (!ctx.text.trim()) {
       throw new Error("Selecione materiais já processados para o Estúdio usar como base.");

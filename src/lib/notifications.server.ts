@@ -38,7 +38,7 @@ export async function pushToUser(
         },
         { subject, publicKey, privateKey },
       );
-      const res = await fetch(sub.endpoint as string, request);
+      const res = await fetch(sub.endpoint as string, request as unknown as RequestInit);
       if (res.status === 404 || res.status === 410) {
         await admin.from("push_subscriptions").delete().eq("id", sub.id as string);
         removed += 1;
