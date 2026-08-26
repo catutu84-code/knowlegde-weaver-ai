@@ -76,7 +76,7 @@ export const generateStudioAsset = createServerFn({ method: "POST" })
           role: "user",
           content: `${recipe}
 
-LINGUAGEM: ${mode ? `${mode.label} — ${mode.instruction}` : "clara, didática e direta"}
+LINGUAGEM: ${mode ? `${mode.label} — ${mode.prompt}` : "clara, didática e direta"}
 ${data.instruction ? `PEDIDO DO ALUNO: ${data.instruction}` : ""}
 
 Ao final, inclua uma seção "## Fontes" listando os títulos dos materiais usados.
