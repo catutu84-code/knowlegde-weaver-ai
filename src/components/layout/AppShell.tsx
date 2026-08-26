@@ -23,11 +23,16 @@ import {
   Flame,
   PanelLeftClose,
   PanelLeftOpen,
+  Wand2,
+  Activity,
+  Heart,
 } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useProfile, useSession, useIsAdmin } from "@/lib/auth";
 import { levelFromXp } from "@/lib/library";
+import { syncMyNotifications } from "@/lib/notifications.functions";
+import { registerServiceWorker } from "@/lib/push";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
@@ -38,6 +43,7 @@ import { cn } from "@/lib/utils";
 const NAV = [
   { to: "/inicio", label: "Início", icon: Home },
   { to: "/tutor", label: "Professora Catoala", icon: Bot },
+  { to: "/estudio", label: "Estúdio Catoala", icon: Wand2 },
   { to: "/livro", label: "Modo Livro", icon: BookOpen },
   { to: "/mapas", label: "Mapas Mentais", icon: Network },
   { to: "/quiz", label: "Quiz", icon: Target },
@@ -47,6 +53,8 @@ const NAV = [
   { to: "/erros", label: "Caderno de Erros", icon: XCircle },
   { to: "/revisoes", label: "Revisões", icon: RefreshCw },
   { to: "/desempenho", label: "Meu Progresso", icon: BarChart3 },
+  { to: "/ritmo", label: "Meu Ritmo", icon: Activity },
+  { to: "/pausa", label: "Pausa Catoala", icon: Heart },
   { to: "/plano", label: "Plano de Estudos", icon: CalendarDays },
   { to: "/favoritos", label: "Favoritos", icon: Star },
   { to: "/comunidade", label: "Comunidade", icon: Users },
@@ -209,6 +217,15 @@ export function AppShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     setCollapsed(window.localStorage.getItem("catoala:sidebar") === "collapsed");
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    void registerServiceWorker();
+    const key = `catoala:sync:${new Date().toISOString().slice(0, 13)}`;
+    if (window.sessionStorage.getItem(key)) return;
+    window.sessionStorage.setItem(key, "1");
+    void syncMyNotifications({ data: undefined as never }).catch(() => undefined);
+  }, [user]);
 
   function toggleCollapsed() {
     setCollapsed((prev) => {

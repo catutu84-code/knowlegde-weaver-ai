@@ -46,8 +46,8 @@ export const talkToPause = createServerFn({ method: "POST" })
   .inputValidator(
     (input: {
       message: string;
-      mood?: string;
-      history?: Array<{ role: "user" | "assistant"; content: string }>;
+      mood?: string | undefined;
+      history?: Array<{ role: "user" | "assistant"; content: string }> | undefined;
     }) => input,
   )
   .handler(async ({ data, context }) => {
@@ -81,7 +81,7 @@ export const talkToPause = createServerFn({ method: "POST" })
 
 export const savePauseEntry = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { entry: string; mood?: string }) => input)
+  .inputValidator((input: { entry: string; mood?: string | undefined }) => input)
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase.from("pause_journal").insert({
       user_id: context.userId,

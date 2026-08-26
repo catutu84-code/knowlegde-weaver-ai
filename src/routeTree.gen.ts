@@ -18,6 +18,7 @@ import { Route as AuthenticatedComunidadeRouteImport } from './routes/_authentic
 import { Route as AuthenticatedConfiguracoesRouteImport } from './routes/_authenticated/configuracoes'
 import { Route as AuthenticatedDesempenhoRouteImport } from './routes/_authenticated/desempenho'
 import { Route as AuthenticatedErrosRouteImport } from './routes/_authenticated/erros'
+import { Route as AuthenticatedEstudioRouteImport } from './routes/_authenticated/estudio'
 import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authenticated/favoritos'
 import { Route as AuthenticatedFlashcardsRouteImport } from './routes/_authenticated/flashcards'
 import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
@@ -77,6 +78,11 @@ const AuthenticatedDesempenhoRoute = AuthenticatedDesempenhoRouteImport.update({
 const AuthenticatedErrosRoute = AuthenticatedErrosRouteImport.update({
   id: '/erros',
   path: '/erros',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedEstudioRoute = AuthenticatedEstudioRouteImport.update({
+  id: '/estudio',
+  path: '/estudio',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedFavoritosRoute = AuthenticatedFavoritosRouteImport.update({
@@ -166,6 +172,7 @@ export interface FileRoutesByFullPath {
   '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/desempenho': typeof AuthenticatedDesempenhoRoute
   '/erros': typeof AuthenticatedErrosRoute
+  '/estudio': typeof AuthenticatedEstudioRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/flashcards': typeof AuthenticatedFlashcardsRoute
   '/inicio': typeof AuthenticatedInicioRoute
@@ -191,6 +198,7 @@ export interface FileRoutesByTo {
   '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/desempenho': typeof AuthenticatedDesempenhoRoute
   '/erros': typeof AuthenticatedErrosRoute
+  '/estudio': typeof AuthenticatedEstudioRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/flashcards': typeof AuthenticatedFlashcardsRoute
   '/inicio': typeof AuthenticatedInicioRoute
@@ -218,6 +226,7 @@ export interface FileRoutesById {
   '/_authenticated/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/_authenticated/desempenho': typeof AuthenticatedDesempenhoRoute
   '/_authenticated/erros': typeof AuthenticatedErrosRoute
+  '/_authenticated/estudio': typeof AuthenticatedEstudioRoute
   '/_authenticated/favoritos': typeof AuthenticatedFavoritosRoute
   '/_authenticated/flashcards': typeof AuthenticatedFlashcardsRoute
   '/_authenticated/inicio': typeof AuthenticatedInicioRoute
@@ -245,6 +254,7 @@ export interface FileRouteTypes {
     | '/configuracoes'
     | '/desempenho'
     | '/erros'
+    | '/estudio'
     | '/favoritos'
     | '/flashcards'
     | '/inicio'
@@ -270,6 +280,7 @@ export interface FileRouteTypes {
     | '/configuracoes'
     | '/desempenho'
     | '/erros'
+    | '/estudio'
     | '/favoritos'
     | '/flashcards'
     | '/inicio'
@@ -296,6 +307,7 @@ export interface FileRouteTypes {
     | '/_authenticated/configuracoes'
     | '/_authenticated/desempenho'
     | '/_authenticated/erros'
+    | '/_authenticated/estudio'
     | '/_authenticated/favoritos'
     | '/_authenticated/flashcards'
     | '/_authenticated/inicio'
@@ -383,6 +395,13 @@ declare module '@tanstack/react-router' {
       path: '/erros'
       fullPath: '/erros'
       preLoaderRoute: typeof AuthenticatedErrosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/estudio': {
+      id: '/_authenticated/estudio'
+      path: '/estudio'
+      fullPath: '/estudio'
+      preLoaderRoute: typeof AuthenticatedEstudioRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/favoritos': {
@@ -511,6 +530,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedConfiguracoesRoute: typeof AuthenticatedConfiguracoesRoute
   AuthenticatedDesempenhoRoute: typeof AuthenticatedDesempenhoRoute
   AuthenticatedErrosRoute: typeof AuthenticatedErrosRoute
+  AuthenticatedEstudioRoute: typeof AuthenticatedEstudioRoute
   AuthenticatedFavoritosRoute: typeof AuthenticatedFavoritosRoute
   AuthenticatedFlashcardsRoute: typeof AuthenticatedFlashcardsRoute
   AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
@@ -533,6 +553,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedConfiguracoesRoute: AuthenticatedConfiguracoesRoute,
   AuthenticatedDesempenhoRoute: AuthenticatedDesempenhoRoute,
   AuthenticatedErrosRoute: AuthenticatedErrosRoute,
+  AuthenticatedEstudioRoute: AuthenticatedEstudioRoute,
   AuthenticatedFavoritosRoute: AuthenticatedFavoritosRoute,
   AuthenticatedFlashcardsRoute: AuthenticatedFlashcardsRoute,
   AuthenticatedInicioRoute: AuthenticatedInicioRoute,
