@@ -935,8 +935,11 @@ export type Database = {
           display_name: string
           id: string
           last_study_date: string | null
+          mascot_enabled: boolean
+          reduced_motion: boolean
           streak: number
           teach_prefs: Json
+          theme: string
           updated_at: string
           user_id: string
           weekly_goal_minutes: number
@@ -949,8 +952,11 @@ export type Database = {
           display_name?: string
           id?: string
           last_study_date?: string | null
+          mascot_enabled?: boolean
+          reduced_motion?: boolean
           streak?: number
           teach_prefs?: Json
+          theme?: string
           updated_at?: string
           user_id: string
           weekly_goal_minutes?: number
@@ -963,8 +969,11 @@ export type Database = {
           display_name?: string
           id?: string
           last_study_date?: string | null
+          mascot_enabled?: boolean
+          reduced_motion?: boolean
           streak?: number
           teach_prefs?: Json
+          theme?: string
           updated_at?: string
           user_id?: string
           weekly_goal_minutes?: number
