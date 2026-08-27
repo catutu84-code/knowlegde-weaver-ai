@@ -56,57 +56,251 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-:root {
+/* ------------------------------------------------------------------ */
+/* Tema padrão: Rosa Catoala                                           */
+/* ------------------------------------------------------------------ */
+:root,
+[data-theme="pink"] {
   --radius: 1rem;
 
-  /* Brand */
-  --blush: #f7c9d9;
-  --blush-soft: #fff4f8;
-  --sky: #cbe8fa;
+  --blush: #f5c7de;
+  --blush-soft: #fff2f8;
+  --sky: #a9d7f7;
   --sky-soft: #f1f9ff;
 
-  --background: #ffffff;
-  --foreground: #28324a;
+  --background: #fff8fc;
+  --foreground: #273142;
   --card: #ffffff;
-  --card-foreground: #28324a;
+  --card-foreground: #273142;
   --popover: #ffffff;
-  --popover-foreground: #28324a;
-  --primary: #d97a9f;
+  --popover-foreground: #273142;
+  --primary: #d85b9b;
   --primary-foreground: #ffffff;
   --secondary: #f1f9ff;
-  --secondary-foreground: #28324a;
-  --muted: #f7f8fb;
+  --secondary-foreground: #273142;
+  --muted: #f9f4f7;
   --muted-foreground: #667085;
-  --accent: #82bfe8;
-  --accent-foreground: #12293b;
-  --destructive: #e5544b;
+  --accent: #a9d7f7;
+  --accent-foreground: #123049;
+  --destructive: #d94a41;
   --destructive-foreground: #ffffff;
-  --success: #3faf87;
+  --success: #2f9a74;
   --success-foreground: #ffffff;
-  --warning: #e0a53c;
-  --warning-foreground: #26200f;
-  --border: #e8eaf0;
-  --input: #e8eaf0;
-  --ring: #82bfe8;
-  --chart-1: #e996b4;
-  --chart-2: #82bfe8;
-  --chart-3: #b39ae0;
-  --chart-4: #63c9ac;
-  --chart-5: #f0b46a;
+  --warning: #b57c14;
+  --warning-foreground: #ffffff;
+  --border: #f0e3ea;
+  --input: #ebdde6;
+  --ring: #d85b9b;
+  --chart-1: #d85b9b;
+  --chart-2: #4b9bd5;
+  --chart-3: #9b86d8;
+  --chart-4: #3faf87;
+  --chart-5: #e0a53c;
   --sidebar: #ffffff;
-  --sidebar-foreground: #28324a;
-  --sidebar-primary: #e996b4;
+  --sidebar-foreground: #273142;
+  --sidebar-primary: #d85b9b;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #fff4f8;
-  --sidebar-accent-foreground: #28324a;
-  --sidebar-border: #e8eaf0;
-  --sidebar-ring: #82bfe8;
+  --sidebar-accent: #fff2f8;
+  --sidebar-accent-foreground: #273142;
+  --sidebar-border: #f0e3ea;
+  --sidebar-ring: #d85b9b;
 
-  --gradient-brand: linear-gradient(135deg, #f7c9d9 0%, #cbe8fa 100%);
-  --gradient-hero: linear-gradient(135deg, #fff4f8 0%, #ffffff 45%, #f1f9ff 100%);
-  --gradient-soft: linear-gradient(135deg, rgb(247 201 217 / 0.35) 0%, rgb(203 232 250 / 0.35) 100%);
-  --shadow-soft: 0 1px 2px rgb(40 50 74 / 0.04), 0 10px 30px -18px rgb(40 50 74 / 0.16);
-  --shadow-glow: 0 0 0 1px rgb(233 150 180 / 0.25), 0 18px 44px -22px rgb(130 191 232 / 0.55);
+  --cato-fur: #cdd8e6;
+  --cato-fur-dark: #adbccf;
+  --cato-belly: #ffffff;
+  --cato-nose: #3d4a60;
+  --cato-blush: #f5b6d0;
+  --cato-accent: #d85b9b;
+  --cato-accent-2: #4b9bd5;
+
+  --gradient-brand: linear-gradient(135deg, #f5c7de 0%, #a9d7f7 100%);
+  --gradient-hero: linear-gradient(135deg, #fff2f8 0%, #fff8fc 45%, #f1f9ff 100%);
+  --gradient-soft: linear-gradient(135deg, rgb(245 199 222 / 0.42) 0%, rgb(169 215 247 / 0.34) 100%);
+  --shadow-soft: 0 1px 2px rgb(39 49 66 / 0.04), 0 10px 30px -18px rgb(39 49 66 / 0.16);
+  --shadow-glow: 0 0 0 1px rgb(216 91 155 / 0.18), 0 18px 44px -22px rgb(169 215 247 / 0.6);
+}
+
+/* ------------------------------------------------------------------ */
+/* Tema Azul Catoala                                                   */
+/* ------------------------------------------------------------------ */
+[data-theme="blue"] {
+  --blush: #e891bc;
+  --blush-soft: #fdeff5;
+  --sky: #cbe9ff;
+  --sky-soft: #f5faff;
+
+  --background: #f5faff;
+  --foreground: #253244;
+  --card: #ffffff;
+  --card-foreground: #253244;
+  --popover: #ffffff;
+  --popover-foreground: #253244;
+  --primary: #2f6f9f;
+  --primary-foreground: #ffffff;
+  --secondary: #eaf4fd;
+  --secondary-foreground: #253244;
+  --muted: #eef4fa;
+  --muted-foreground: #667085;
+  --accent: #e891bc;
+  --accent-foreground: #40182b;
+  --destructive: #d94a41;
+  --destructive-foreground: #ffffff;
+  --success: #2f9a74;
+  --success-foreground: #ffffff;
+  --warning: #b57c14;
+  --warning-foreground: #ffffff;
+  --border: #dce9f5;
+  --input: #d3e3f2;
+  --ring: #4b9bd5;
+  --chart-1: #4b9bd5;
+  --chart-2: #e891bc;
+  --chart-3: #7f8fd8;
+  --chart-4: #3faf87;
+  --chart-5: #e0a53c;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #253244;
+  --sidebar-primary: #2f6f9f;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eaf4fd;
+  --sidebar-accent-foreground: #253244;
+  --sidebar-border: #dce9f5;
+  --sidebar-ring: #4b9bd5;
+
+  --cato-fur: #cfdcea;
+  --cato-fur-dark: #a9bdd2;
+  --cato-belly: #ffffff;
+  --cato-nose: #33435c;
+  --cato-blush: #e891bc;
+  --cato-accent: #4b9bd5;
+  --cato-accent-2: #e891bc;
+
+  --gradient-brand: linear-gradient(135deg, #cbe9ff 0%, #e891bc 100%);
+  --gradient-hero: linear-gradient(135deg, #eaf4fd 0%, #f5faff 45%, #fdeff5 100%);
+  --gradient-soft: linear-gradient(135deg, rgb(203 233 255 / 0.55) 0%, rgb(232 145 188 / 0.22) 100%);
+  --shadow-soft: 0 1px 2px rgb(37 50 68 / 0.04), 0 10px 30px -18px rgb(37 50 68 / 0.18);
+  --shadow-glow: 0 0 0 1px rgb(75 155 213 / 0.2), 0 18px 44px -22px rgb(75 155 213 / 0.55);
+}
+
+/* ------------------------------------------------------------------ */
+/* Modo Claro                                                          */
+/* ------------------------------------------------------------------ */
+[data-theme="light"] {
+  --blush: #d85b9b;
+  --blush-soft: #fdf1f7;
+  --sky: #65a9d9;
+  --sky-soft: #f0f7fc;
+
+  --background: #f8fafc;
+  --foreground: #1f2937;
+  --card: #ffffff;
+  --card-foreground: #1f2937;
+  --popover: #ffffff;
+  --popover-foreground: #1f2937;
+  --primary: #6574c4;
+  --primary-foreground: #ffffff;
+  --secondary: #eef1f7;
+  --secondary-foreground: #1f2937;
+  --muted: #f1f5f9;
+  --muted-foreground: #5b6675;
+  --accent: #65a9d9;
+  --accent-foreground: #12293b;
+  --destructive: #d94a41;
+  --destructive-foreground: #ffffff;
+  --success: #2f9a74;
+  --success-foreground: #ffffff;
+  --warning: #b57c14;
+  --warning-foreground: #ffffff;
+  --border: #e2e8f0;
+  --input: #dbe2ea;
+  --ring: #6574c4;
+  --chart-1: #6574c4;
+  --chart-2: #65a9d9;
+  --chart-3: #d85b9b;
+  --chart-4: #3faf87;
+  --chart-5: #e0a53c;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1f2937;
+  --sidebar-primary: #6574c4;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eef1f7;
+  --sidebar-accent-foreground: #1f2937;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #6574c4;
+
+  --cato-fur: #cfd7e2;
+  --cato-fur-dark: #aab5c4;
+  --cato-belly: #ffffff;
+  --cato-nose: #374151;
+  --cato-blush: #d85b9b;
+  --cato-accent: #6574c4;
+  --cato-accent-2: #65a9d9;
+
+  --gradient-brand: linear-gradient(135deg, #d85b9b 0%, #65a9d9 100%);
+  --gradient-hero: linear-gradient(135deg, #fdf1f7 0%, #f8fafc 50%, #f0f7fc 100%);
+  --gradient-soft: linear-gradient(135deg, rgb(216 91 155 / 0.14) 0%, rgb(101 169 217 / 0.18) 100%);
+  --shadow-soft: 0 1px 2px rgb(31 41 55 / 0.04), 0 10px 30px -18px rgb(31 41 55 / 0.18);
+  --shadow-glow: 0 0 0 1px rgb(101 116 196 / 0.18), 0 18px 44px -22px rgb(101 116 196 / 0.45);
+}
+
+/* ------------------------------------------------------------------ */
+/* Modo Noturno                                                        */
+/* ------------------------------------------------------------------ */
+[data-theme="dark"] {
+  --blush: #f18ab8;
+  --blush-soft: #2a2137;
+  --sky: #82bde8;
+  --sky-soft: #1b2942;
+
+  --background: #0f172a;
+  --foreground: #f8fafc;
+  --card: #182235;
+  --card-foreground: #f8fafc;
+  --popover: #182235;
+  --popover-foreground: #f8fafc;
+  --primary: #82bde8;
+  --primary-foreground: #0d1b2a;
+  --secondary: #1e293b;
+  --secondary-foreground: #f8fafc;
+  --muted: #1e293b;
+  --muted-foreground: #b8c1d1;
+  --accent: #f18ab8;
+  --accent-foreground: #2a0f1d;
+  --destructive: #f2726a;
+  --destructive-foreground: #23090a;
+  --success: #56c8a1;
+  --success-foreground: #05231a;
+  --warning: #edb757;
+  --warning-foreground: #2a1f05;
+  --border: #334155;
+  --input: #334155;
+  --ring: #82bde8;
+  --chart-1: #82bde8;
+  --chart-2: #f18ab8;
+  --chart-3: #a99af0;
+  --chart-4: #56c8a1;
+  --chart-5: #edb757;
+  --sidebar: #131d30;
+  --sidebar-foreground: #f8fafc;
+  --sidebar-primary: #82bde8;
+  --sidebar-primary-foreground: #0d1b2a;
+  --sidebar-accent: #1e293b;
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-border: #334155;
+  --sidebar-ring: #82bde8;
+
+  --cato-fur: #8fa3bd;
+  --cato-fur-dark: #6d819c;
+  --cato-belly: #dbe6f4;
+  --cato-nose: #1b2536;
+  --cato-blush: #f18ab8;
+  --cato-accent: #82bde8;
+  --cato-accent-2: #f18ab8;
+
+  --gradient-brand: linear-gradient(135deg, #82bde8 0%, #f18ab8 100%);
+  --gradient-hero: linear-gradient(135deg, #182235 0%, #0f172a 50%, #1b2942 100%);
+  --gradient-soft: linear-gradient(135deg, rgb(130 189 232 / 0.22) 0%, rgb(241 138 184 / 0.18) 100%);
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 30px -18px rgb(0 0 0 / 0.7);
+  --shadow-glow: 0 0 0 1px rgb(130 189 232 / 0.25), 0 18px 44px -22px rgb(130 189 232 / 0.55);
 }
 
 @layer base {
@@ -115,8 +309,12 @@
   }
 
   html {
-    color-scheme: light;
     -webkit-text-size-adjust: 100%;
+    color-scheme: light;
+  }
+
+  html[data-theme="dark"] {
+    color-scheme: dark;
   }
 
   body {
@@ -124,10 +322,11 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     font-weight: 400;
-    background-image: radial-gradient(760px 460px at 8% -10%, rgb(247 201 217 / 0.35), transparent 62%),
-      radial-gradient(680px 420px at 98% 0%, rgb(203 232 250 / 0.38), transparent 64%);
+    background-image: radial-gradient(760px 460px at 8% -10%, var(--color-blush-soft), transparent 62%),
+      radial-gradient(680px 420px at 98% 0%, var(--color-sky-soft), transparent 64%);
     background-attachment: fixed;
     overflow-x: hidden;
+    transition: background-color 200ms ease, color 200ms ease;
   }
 
   h1,
@@ -172,7 +371,7 @@
 }
 
 @utility text-gradient {
-  background-image: linear-gradient(120deg, #d4658c, #3f93c9);
+  background-image: var(--gradient-brand);
   background-clip: text;
   color: transparent;
 }
@@ -186,5 +385,54 @@
   &:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-glow);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Animações do mascote Cato                                           */
+/* ------------------------------------------------------------------ */
+@keyframes cato-wave {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(16deg); }
+  60% { transform: rotate(-8deg); }
+}
+
+@keyframes cato-blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.08); }
+}
+
+@keyframes cato-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes cato-cheer {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  30% { transform: translateY(-8px) rotate(-3deg); }
+  60% { transform: translateY(-2px) rotate(3deg); }
+}
+
+@keyframes cato-read {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+.cato-anim [data-cato="arm"] { animation: cato-wave 2.8s ease-in-out infinite; transform-origin: 34px 62px; }
+.cato-anim [data-cato="eyes"] { animation: cato-blink 5.5s ease-in-out infinite; transform-origin: center 44px; }
+.cato-anim[data-variant="estudando"] [data-cato="body"] { animation: cato-read 3.2s ease-in-out infinite; transform-origin: 50px 80px; }
+.cato-anim[data-variant="comemorando"] [data-cato="body"] { animation: cato-cheer 1.6s ease-in-out infinite; }
+.cato-anim[data-variant="padrao"] [data-cato="body"],
+.cato-anim[data-variant="acolhedor"] [data-cato="body"],
+.cato-anim[data-variant="noturno"] [data-cato="body"] { animation: cato-float 4s ease-in-out infinite; }
+
+.cato-paused *,
+html[data-reduced-motion="true"] .cato-anim * {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cato-anim * {
+    animation: none !important;
   }
 }
