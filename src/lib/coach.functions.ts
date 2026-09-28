@@ -5,7 +5,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 /** A IA escolhe UMA atividade concreta com base no progresso real do estudante. */
 export const suggestActivity = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { minutes?: number }) => input)
+  .inputValidator((input: { minutes?: number; situation?: string; focus?: string }) => input)
   .handler(async ({ data, context }) => {
     const { callAI, parseJson } = await import("./ai.server");
     const { TEACHER_SYSTEM } = await import("./teach-modes");
@@ -59,6 +59,8 @@ export const suggestActivity = createServerFn({ method: "POST" })
 Responda SOMENTE com JSON: {"titulo":"o que fazer agora","motivo":"por que isso agora, em 1 frase","acao":"quiz|flashcards|revisao|livro|resumo|mapa|tutor","minutos":${minutes},"mensagem":"frase curta de incentivo, calorosa e específica, sem exagero"}
 
 OBJETIVO: ${JSON.stringify(rhythm.data ?? {})}
+SITUAÇÃO INFORMADA AGORA: ${data.situation ?? "não informada"}
+FOCO INFORMADO AGORA: ${data.focus ?? "não informado"}
 MATÉRIAS: ${JSON.stringify(subjects.data ?? [])}
 ERROS NÃO RESOLVIDOS: ${JSON.stringify(errors.data ?? [])}
 LIVROS: ${JSON.stringify(books.data ?? [])}

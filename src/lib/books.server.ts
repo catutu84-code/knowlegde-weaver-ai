@@ -105,7 +105,9 @@ SUMÁRIO COMPLETO:
 ${outlineText}
 
 Requisitos do capítulo:
-- Conteúdo substancial, didático e fiel, com explicações, exemplos identificados, pontos importantes e resumo.
+- Conteúdo substancial, didático e fiel, com subcapítulos claros.
+- Inclua as seções "## Explicação", "## Conceitos importantes", "## Exemplos explicativos", "## Resumo do capítulo" e "## Perguntas de revisão".
+- Identifique todo exemplo criado para ensinar como "Exemplo complementar da IA".
 - Não mencione fatos que não estejam nos materiais.
 - Termine com a seção "## Fontes deste capítulo" e liste somente títulos exatos das fontes usadas.
 - Não escreva outros capítulos.

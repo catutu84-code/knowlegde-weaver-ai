@@ -13,6 +13,8 @@ function clean(text: string) {
 
 export function buildBookPdf(book: {
   title: string;
+  subtitle?: string | null;
+  introduction?: string | null;
   styleLabel: string;
   chapters: PdfChapter[];
 }): jsPDF {
@@ -71,7 +73,13 @@ export function buildBookPdf(book: {
   }
   doc.setFont("helvetica", "normal");
   doc.setFontSize(13);
-  doc.text(`Estilo de explicação: ${book.styleLabel}`, W / 2, ty + 18, { align: "center" });
+  if (book.subtitle) {
+    const subtitleLines = doc.splitTextToSize(book.subtitle, maxW) as string[];
+    doc.text(subtitleLines, W / 2, ty + 18, { align: "center" });
+    ty += subtitleLines.length * 18;
+  }
+  doc.setFontSize(11);
+  doc.text(`Estilo de explicação: ${book.styleLabel}`, W / 2, ty + 24, { align: "center" });
   doc.setFontSize(11);
   doc.setTextColor(190);
   doc.text("Livro digital gerado pelo Tutor IA Catoala", W / 2, H - 70, { align: "center" });
@@ -120,6 +128,16 @@ export function buildBookPdf(book: {
   doc.setFontSize(20);
   doc.text("Sumário", M, y);
   y += 34;
+  if (book.introduction) {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    const intro = doc.splitTextToSize(clean(book.introduction), maxW) as string[];
+    for (const line of intro.slice(0, 14)) {
+      doc.text(line, M, y);
+      y += 14;
+    }
+    y += 12;
+  }
   doc.setFontSize(11.5);
   for (const item of toc) {
     if (y > bottom) break;
@@ -133,7 +151,7 @@ export function buildBookPdf(book: {
   return doc;
 }
 
-export function downloadBookPdf(book: { title: string; styleLabel: string; chapters: PdfChapter[] }) {
+export function downloadBookPdf(book: { title: string; subtitle?: string | null; introduction?: string | null; styleLabel: string; chapters: PdfChapter[] }) {
   const doc = buildBookPdf(book);
   const name = book.title.replace(/[^\p{L}\p{N} _-]/gu, "").trim() || "livro";
   doc.save(`${name}.pdf`);

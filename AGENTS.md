@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Preserve the existing study-domain tables and extend them additively; this protects user data while keeping the learning journey connected.
+- Pass selected study material between existing routes through session-scoped context; this avoids duplicate feature routes and stale permanent links.
