@@ -34,6 +34,8 @@ import { levelFromXp } from "@/lib/library";
 import { syncMyNotifications } from "@/lib/notifications.functions";
 import { registerServiceWorker } from "@/lib/push";
 import { Logo, LogoMark } from "@/components/brand/Logo";
+import { AppearanceOnboarding } from "@/components/theme/AppearanceOnboarding";
+import { ThemeQuickMenu } from "@/components/theme/ThemeControls";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -246,6 +248,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <TooltipProvider delayDuration={200}>
+      <AppearanceOnboarding />
       <div className="flex min-h-screen">
         <aside
           className={cn(
@@ -276,6 +279,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <span className="hidden lg:block" />
 
             <div className="col-start-3 flex items-center gap-1.5">
+              <ThemeQuickMenu />
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button asChild variant="ghost" size="icon" aria-label="Perfil">
