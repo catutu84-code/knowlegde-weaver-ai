@@ -251,7 +251,7 @@ function HomePage() {
       </section>
 
       <section className="grid gap-4 lg:grid-cols-3">
-          <div className="surface p-5 lg:col-span-2">
+        <div className="surface min-w-0 p-5 lg:col-span-2">
           <h2 className="text-base font-semibold">Continuar estudando</h2>
           {book && book.generation_status === "ready" ? (
             <div className="mt-3 rounded-lg border border-border p-4">
@@ -302,7 +302,7 @@ function HomePage() {
           </div>
         </div>
 
-        <div className="surface p-5">
+        <div className="surface min-w-0 p-5">
           <h2 className="text-base font-semibold">Para revisar</h2>
           {(stats.data?.errors ?? []).length === 0 ? (
             <p className="mt-3 text-sm text-muted-foreground">Nada pendente. Continue assim!</p>

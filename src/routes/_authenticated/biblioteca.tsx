@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { CatoMessage } from "@/components/brand/Cato";
 
 export const Route = createFileRoute("/_authenticated/biblioteca")({
   head: () => ({
@@ -188,14 +189,16 @@ function LibraryPage() {
       </div>
 
       {list.length === 0 ? (
-        <div className="surface p-10 text-center">
-          <Layers className="mx-auto size-8 text-muted-foreground" />
-          <p className="mt-3 text-sm text-muted-foreground">
-            Nenhum material aqui ainda. Adicione um arquivo, texto ou link para começar.
-          </p>
-          <Button asChild size="sm" className="mt-4">
-            <Link to="/adicionar">Adicionar material</Link>
-          </Button>
+        <div className="surface mx-auto max-w-xl p-6">
+          <CatoMessage
+            variant="incentivando"
+            size="md"
+            message="Ainda não há materiais por aqui. Envie um arquivo, texto ou link e eu ajudo você a estudar."
+          >
+            <Button asChild size="sm">
+              <Link to="/adicionar">Adicionar material</Link>
+            </Button>
+          </CatoMessage>
         </div>
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
