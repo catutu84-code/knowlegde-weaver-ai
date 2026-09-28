@@ -35,6 +35,9 @@ export type Profile = {
   streak: number;
   last_study_date: string | null;
   weekly_goal_minutes: number;
+  theme: "pink" | "blue" | "light" | "dark" | "system";
+  mascot_enabled: boolean;
+  reduced_motion: boolean;
 };
 
 export async function ensureProfile(user: User): Promise<Profile | null> {

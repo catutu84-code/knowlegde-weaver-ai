@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { Markdown } from "@/components/study/Markdown";
 import { cn } from "@/lib/utils";
+import { Cato, CatoMessage } from "@/components/brand/Cato";
 
 type Question = {
   id: string;
@@ -181,7 +182,9 @@ export function QuizRunner({
   if (quizQuery.isLoading) {
     return (
       <div className="surface grid place-items-center p-12">
+        <Cato variant="estudando" size="md" />
         <Loader2 className="size-6 animate-spin text-primary" />
+        <p className="mt-2 text-sm text-muted-foreground">O Cato está preparando seu quiz...</p>
       </div>
     );
   }
@@ -190,7 +193,8 @@ export function QuizRunner({
     const pct = questions.length ? Math.round((score / questions.length) * 100) : 0;
     return (
       <div className="surface p-8 text-center">
-        <Trophy className="mx-auto size-10 text-accent" />
+        <Cato variant="comemorando" size="lg" className="mx-auto" />
+        <Trophy className="mx-auto mt-2 size-8 text-accent" />
         <h2 className="mt-4 text-2xl font-bold">
           {score}/{questions.length}
         </h2>

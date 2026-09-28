@@ -38,6 +38,7 @@ import { ScopePicker, emptyScope, type StudyScope } from "@/components/study/Sco
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { Cato } from "@/components/brand/Cato";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -416,10 +417,9 @@ function TutorPage() {
             ))
           )}
           {busy ? (
-            <p className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="size-4 animate-spin text-primary" /> A Professora Catoala está pensando na melhor
-              explicação...
-            </p>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Cato variant="estudando" size="xs" /> A Professora Catoala está pensando na melhor explicação...
+            </div>
           ) : null}
           <div ref={endRef} />
         </div>

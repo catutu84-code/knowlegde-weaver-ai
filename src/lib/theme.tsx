@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { supabase } from "@/integrations/supabase/client";
 
@@ -108,13 +108,16 @@ async function persistToProfile(next: AppearancePrefs) {
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [prefs, setPrefs] = useState<AppearancePrefs>(DEFAULTS);
+  const [hydrated, setHydrated] = useState(false);
   const [hasChosenTheme, setHasChosenTheme] = useState(true);
   const [systemTick, setSystemTick] = useState(0);
+  const persistQueue = useRef<Promise<void>>(Promise.resolve());
 
   // Hidrata a partir do armazenamento local (evita piscar) e depois do perfil.
   useEffect(() => {
     const local = readLocalPrefs();
     setPrefs(local);
+    setHydrated(true);
     applyAppearance(local);
     setHasChosenTheme(window.localStorage.getItem(STORAGE_KEY) !== null);
 
@@ -161,14 +164,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const savePrefs = useCallback(
     async (patch: Partial<AppearancePrefs>) => {
-      const next = { ...readLocalPrefs(), ...prefs, ...patch };
+      const next = { ...readLocalPrefs(), ...patch };
       setPrefs(next);
       applyAppearance(next);
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
       setHasChosenTheme(true);
-      await persistToProfile(next).catch(() => undefined);
+      persistQueue.current = persistQueue.current.then(() => persistToProfile(next)).catch(() => undefined);
+      await persistQueue.current;
     },
-    [prefs],
+    [],
   );
 
   const value = useMemo<ThemeContextValue>(
@@ -188,7 +192,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     [prefs, savePrefs, hasChosenTheme],
   );
 
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  return hydrated ? <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider> : null;
 }
 
 export function useTheme(): ThemeContextValue {

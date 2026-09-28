@@ -30,6 +30,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { CatoMessage } from "@/components/brand/Cato";
 
 export const Route = createFileRoute("/_authenticated/estudio")({
   head: () => ({
@@ -230,7 +231,7 @@ function EstudioPage() {
             <Loader2 className="size-4 animate-spin" /> Carregando...
           </p>
         ) : (assets.data ?? []).length === 0 ? (
-          <p className="text-sm text-muted-foreground">Nada criado ainda. Escolha um formato acima para começar.</p>
+          <CatoMessage variant="estudando" message="Nada criado ainda. Escolha um formato acima e eu preparo com você." />
         ) : (
           <ul className="space-y-2">
             {assets.data?.map((a) => (

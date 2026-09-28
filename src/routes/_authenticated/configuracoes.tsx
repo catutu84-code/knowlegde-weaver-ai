@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { LogOut, Save } from "lucide-react";
+import { LogOut, Palette, Save } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -11,6 +11,9 @@ import { PageHeader } from "@/components/study/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { AppearancePanel } from "@/components/theme/ThemeControls";
+import { CatoMessage } from "@/components/brand/Cato";
+import { useTheme } from "@/lib/theme";
 import {
   Select,
   SelectContent,
@@ -34,6 +37,7 @@ function SettingsPage() {
   const { data: profile } = useProfile(user?.id);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const appearance = useTheme();
 
   const [name, setName] = useState("");
   const [goal, setGoal] = useState("300");
@@ -66,6 +70,17 @@ function SettingsPage() {
     }
     toast.success("Perfil atualizado!");
     queryClient.invalidateQueries({ queryKey: ["profile"] });
+  }
+
+  async function saveAppearance() {
+    setSaving(true);
+    await appearance.savePrefs({
+      theme: appearance.theme,
+      mascotEnabled: appearance.mascotEnabled,
+      reducedMotion: appearance.reducedMotion,
+    });
+    setSaving(false);
+    toast.success("Preferências de aparência salvas!");
   }
 
   async function signOut() {
@@ -115,6 +130,24 @@ function SettingsPage() {
           <Save className="size-4" /> Salvar alterações
         </Button>
       </div>
+
+      <section className="space-y-4" aria-labelledby="appearance-heading">
+        <div>
+          <div className="flex items-center gap-2">
+            <Palette className="size-5 text-primary" />
+            <h2 id="appearance-heading" className="text-xl font-bold">Aparência</h2>
+          </div>
+          <h3 className="mt-2 text-base font-semibold">Deixe o Tutor IA Catoala com a sua cara</h3>
+          <p className="text-sm text-muted-foreground">Escolha as cores que deixam seus estudos mais confortáveis.</p>
+        </div>
+        <div className="surface space-y-5 p-5">
+          <CatoMessage variant={appearance.resolvedTheme === "dark" ? "noturno" : "padrao"} message="Preparei cinco ambientes para você estudar do seu jeito." />
+          <AppearancePanel />
+          <Button onClick={saveAppearance} disabled={saving}>
+            <Save className="size-4" /> Salvar preferências
+          </Button>
+        </div>
+      </section>
 
       <div className="surface p-5">
         <h2 className="text-sm font-semibold">Progresso</h2>

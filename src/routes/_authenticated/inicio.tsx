@@ -27,6 +27,7 @@ import { useExams, useRhythm, rhythmStatus, dailyMessage } from "@/lib/rhythm";
 import { suggestActivity } from "@/lib/coach.functions";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Cato, CatoMessage, CATO_LINES } from "@/components/brand/Cato";
 
 export const Route = createFileRoute("/_authenticated/inicio")({
   head: () => ({
@@ -161,11 +162,23 @@ function HomePage() {
 
   return (
     <div className="space-y-6">
-      <section className="surface gradient-hero p-6 sm:p-8">
-        <p className="text-sm text-muted-foreground">
-          Olá, {profile?.display_name ?? "estudante"} — {dailyMessage(user?.id ?? "catoala")}
-        </p>
-        <h1 className="mt-1 text-2xl font-bold sm:text-3xl">Hoje</h1>
+      <section className="surface gradient-hero overflow-hidden p-6 sm:p-8">
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <p className="text-sm text-muted-foreground">
+              Olá, {profile?.display_name ?? "estudante"} — {dailyMessage(user?.id ?? "catoala")}
+            </p>
+            <h1 className="mt-1 text-2xl font-bold sm:text-3xl">Hoje</h1>
+            <p className="mt-2 max-w-xl text-sm text-muted-foreground">
+              {todayMinutes >= dailyGoal
+                ? CATO_LINES.metaConcluida
+                : (profile?.streak ?? 0) > 0
+                  ? CATO_LINES.sequencia
+                  : CATO_LINES.boasVindas}
+            </p>
+          </div>
+          <Cato variant={todayMinutes >= dailyGoal ? "comemorando" : "padrao"} size="lg" className="-mb-5 hidden sm:block" />
+        </div>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-3">
           <div className="rounded-xl border border-border bg-card/70 p-4">
@@ -238,7 +251,7 @@ function HomePage() {
       </section>
 
       <section className="grid gap-4 lg:grid-cols-3">
-        <div className="surface p-5 lg:col-span-2">
+        <div className="surface min-w-0 p-5 lg:col-span-2">
           <h2 className="text-base font-semibold">Continuar estudando</h2>
           {book && book.generation_status === "ready" ? (
             <div className="mt-3 rounded-lg border border-border p-4">
@@ -264,9 +277,11 @@ function HomePage() {
               </Button>
             </div>
           ) : (
-            <p className="mt-3 text-sm text-muted-foreground">
-              Você ainda não estudou nada. Comece adicionando um material à sua biblioteca.
-            </p>
+            <CatoMessage
+              className="mt-3"
+              variant="incentivando"
+              message="Você ainda não estudou nada. Comece adicionando um material à sua biblioteca. Eu estudo com você."
+            />
           )}
 
           <h3 className="mt-6 text-sm font-semibold">Minhas matérias</h3>
@@ -287,7 +302,7 @@ function HomePage() {
           </div>
         </div>
 
-        <div className="surface p-5">
+        <div className="surface min-w-0 p-5">
           <h2 className="text-base font-semibold">Para revisar</h2>
           {(stats.data?.errors ?? []).length === 0 ? (
             <p className="mt-3 text-sm text-muted-foreground">Nada pendente. Continue assim!</p>
