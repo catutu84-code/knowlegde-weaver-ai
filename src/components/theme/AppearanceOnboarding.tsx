@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { useTheme } from "@/lib/theme";
 
 export function AppearanceOnboarding() {
-  const { hasChosenTheme, markThemeChosen } = useTheme();
+  const { hasChosenTheme, markThemeChosen, savePrefs } = useTheme();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -15,6 +15,7 @@ export function AppearanceOnboarding() {
   }, [hasChosenTheme]);
 
   function finish() {
+    void savePrefs({});
     markThemeChosen();
     setOpen(false);
   }
