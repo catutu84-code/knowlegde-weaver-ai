@@ -17,6 +17,11 @@ import {
   PlayCircle,
   Wand2,
   Loader2,
+  Upload,
+  Brain,
+  MessageCircle,
+  RefreshCw,
+  HelpCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -28,6 +33,7 @@ import { suggestActivity } from "@/lib/coach.functions";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Cato, CatoMessage, CATO_LINES } from "@/components/brand/Cato";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/_authenticated/inicio")({
   head: () => ({
@@ -47,12 +53,30 @@ export const Route = createFileRoute("/_authenticated/inicio")({
 });
 
 const quickActions = [
-  { to: "/estudio", label: "Estúdio Catoala", icon: Wand2 },
-  { to: "/livro", label: "Modo Livro", icon: BookOpen },
-  { to: "/quiz", label: "Quiz", icon: Target },
-  { to: "/mapas", label: "Mapa mental", icon: Network },
-  { to: "/flashcards", label: "Flashcards", icon: Layers3 },
-  { to: "/tutor", label: "Professora Catoala", icon: Bot },
+  { to: "/adicionar", label: "Enviar material", icon: Upload },
+  { to: "/livro", label: "Criar livro", icon: BookOpen },
+  { to: "/estudio", label: "Explicar conteúdo", icon: Brain },
+  { to: "/quiz", label: "Criar questões", icon: Target },
+  { to: "/flashcards", label: "Criar flashcards", icon: Layers3 },
+  { to: "/simulados", label: "Criar simulado", icon: GraduationCap },
+  { to: "/tutor", label: "Conversar com o Tutor", icon: MessageCircle },
+] as const;
+
+const learnWays = [
+  { to: "/tutor", label: "Quero entender", hint: "Receba uma explicação no seu jeito", icon: Brain },
+  { to: "/livro", label: "Quero estudar", hint: "Leia seu conteúdo como um livro", icon: BookOpen },
+  { to: "/quiz", label: "Quero testar", hint: "Responda questões comentadas", icon: Target },
+  { to: "/flashcards", label: "Quero memorizar", hint: "Revise com cartões inteligentes", icon: Layers3 },
+  { to: "/revisoes", label: "Quero revisar", hint: "Priorize o que precisa de atenção", icon: RefreshCw },
+  { to: "/tutor", label: "Quero conversar", hint: "Tire dúvidas com a Professora Catoala", icon: Bot },
+] as const;
+
+const START_OPTIONS = [
+  { id: "material", label: "Tenho um material" },
+  { id: "dificuldade", label: "Tenho dificuldade em um assunto" },
+  { id: "prova", label: "Tenho uma prova chegando" },
+  { id: "tempo", label: "Tenho pouco tempo" },
+  { id: "perdido", label: "Estou completamente perdido" },
 ] as const;
 
 const ACTION_LINK: Record<string, string> = {
@@ -76,6 +100,9 @@ function HomePage() {
     null,
   );
   const [thinking, setThinking] = useState(false);
+  const [guideOpen, setGuideOpen] = useState(false);
+  const [guideSituation, setGuideSituation] = useState("");
+  const [guideMinutes, setGuideMinutes] = useState("20");
 
   const stats = useQuery({
     queryKey: ["home-stats", user?.id],
@@ -102,10 +129,10 @@ function HomePage() {
           .limit(1),
         supabase
           .from("books")
-          .select("id,title,reading_progress,generation_status")
+          .select("id,title,reading_progress,generation_status,current_chapter,outline,updated_at")
           .eq("user_id", user!.id)
           .order("updated_at", { ascending: false })
-          .limit(1),
+          .limit(3),
         supabase
           .from("study_sessions")
           .select("minutes")
@@ -125,7 +152,7 @@ function HomePage() {
         errors: errors.data ?? [],
         subjects: subjects.data ?? [],
         last: recent.data?.[0] ?? null,
-        book: book.data?.[0] ?? null,
+        books: book.data ?? [],
       };
     },
   });
@@ -138,13 +165,15 @@ function HomePage() {
   const status = rhythmStatus(minutes, weeklyGoal);
   const nextExam = exams.data?.[0] ?? null;
   const nextSubject = rhythm.data?.subjects?.[0] ?? stats.data?.subjects?.[0]?.name ?? null;
-  const book = stats.data?.book ?? null;
+  const books = stats.data?.books ?? [];
+  const book = books[0] ?? null;
 
-  async function askCoach(minutesWanted: number) {
+  async function askCoach(minutesWanted: number, situation?: string) {
     setThinking(true);
     try {
-      const result = await suggest({ data: { minutes: minutesWanted } });
+      const result = await suggest({ data: { minutes: minutesWanted, situation, focus: nextSubject ?? undefined } });
       setSuggestion(result);
+      setGuideOpen(false);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Não consegui sugerir uma atividade agora.");
     }
@@ -168,13 +197,9 @@ function HomePage() {
             <p className="text-sm text-muted-foreground">
               Olá, {profile?.display_name ?? "estudante"} — {dailyMessage(user?.id ?? "catoala")}
             </p>
-            <h1 className="mt-1 text-2xl font-bold sm:text-3xl">Hoje</h1>
+            <h1 className="mt-1 text-2xl font-bold sm:text-3xl">O que vamos aprender hoje?</h1>
             <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-              {todayMinutes >= dailyGoal
-                ? CATO_LINES.metaConcluida
-                : (profile?.streak ?? 0) > 0
-                  ? CATO_LINES.sequencia
-                  : CATO_LINES.boasVindas}
+              Envie seu material ou escolha uma forma de estudar. O Catoala transforma seu conteúdo em uma experiência de aprendizagem personalizada.
             </p>
           </div>
           <Cato variant={todayMinutes >= dailyGoal ? "comemorando" : "padrao"} size="lg" className="-mb-5 hidden sm:block" />
@@ -211,8 +236,8 @@ function HomePage() {
           <Button size="sm" variant="outline" onClick={continueWhereLeft}>
             <PlayCircle className="size-4" /> Continuar de onde parei
           </Button>
-          <Button size="sm" variant="outline" onClick={() => askCoach(rhythm.data?.minutes_per_day ?? 25)} disabled={thinking}>
-            <Wand2 className="size-4" /> Não sei o que estudar
+          <Button size="sm" variant="outline" onClick={() => setGuideOpen(true)} disabled={thinking}>
+            <HelpCircle className="size-4" /> Não sei por onde começar
           </Button>
           <Button asChild size="sm" variant="outline">
             <Link to="/adicionar">
@@ -243,6 +268,21 @@ function HomePage() {
         </div>
       </section>
 
+      <section>
+        <div className="mb-3">
+          <h2 className="text-base font-semibold">Como você quer estudar hoje?</h2>
+          <p className="text-sm text-muted-foreground">Escolha seu objetivo; o conteúdo continua conectado à sua jornada.</p>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {learnWays.map((item) => (
+            <Link key={item.label} to={item.to} className="surface card-hover flex min-w-0 items-start gap-3 p-4">
+              <span className="surface-soft grid size-10 shrink-0 place-items-center"><item.icon className="size-5 text-primary" /></span>
+              <span className="min-w-0"><span className="block text-sm font-semibold">{item.label}</span><span className="block text-xs text-muted-foreground">{item.hint}</span></span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard icon={Flame} label="Sequência" value={`${profile?.streak ?? 0} dias`} hint={level.name} />
         <StatCard icon={Clock} label="Tempo na semana" value={`${minutes} min`} hint={`meta ${weeklyGoal} min`} />
@@ -253,18 +293,20 @@ function HomePage() {
       <section className="grid gap-4 lg:grid-cols-3">
         <div className="surface min-w-0 p-5 lg:col-span-2">
           <h2 className="text-base font-semibold">Continuar estudando</h2>
-          {book && book.generation_status === "ready" ? (
-            <div className="mt-3 rounded-lg border border-border p-4">
-              <p className="text-sm font-medium">{book.title}</p>
-              <p className="text-xs text-muted-foreground">
-                Leitura em {Math.round(Number(book.reading_progress ?? 0))}%
-              </p>
-              <Progress value={Number(book.reading_progress ?? 0)} className="mt-2 h-1.5" />
-              <Button asChild size="sm" variant="outline" className="mt-3">
-                <Link to="/livro/$bookId" params={{ bookId: book.id as string }}>
-                  Continuar leitura
-                </Link>
-              </Button>
+          {books.some((item) => item.generation_status === "ready") ? (
+            <div className="mt-3 space-y-3">
+              {books.filter((item) => item.generation_status === "ready").map((item) => {
+                const outline = (item.outline ?? []) as Array<{ title?: string }>;
+                const chapter = outline[item.current_chapter ?? 0]?.title;
+                return <div key={item.id} className="rounded-lg border border-border p-4">
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <div className="min-w-0"><p className="truncate text-sm font-medium">{item.title}</p><p className="text-xs text-muted-foreground">{chapter ? `Capítulo ${Number(item.current_chapter) + 1} — ${chapter}` : "Livro pronto para leitura"}</p></div>
+                    <span className="text-xs text-muted-foreground">Acessado {new Date(item.updated_at).toLocaleDateString("pt-BR")}</span>
+                  </div>
+                  <Progress value={Number(item.reading_progress ?? 0)} className="mt-2 h-1.5" />
+                  <div className="mt-2 flex items-center justify-between gap-2"><span className="text-xs text-muted-foreground">{Math.round(Number(item.reading_progress ?? 0))}% concluído</span><Button asChild size="sm" variant="outline"><Link to="/livro/$bookId" params={{ bookId: item.id as string }}>Continuar</Link></Button></div>
+                </div>;
+              })}
             </div>
           ) : stats.data?.last ? (
             <div className="mt-3 rounded-lg border border-border p-4">
@@ -280,8 +322,8 @@ function HomePage() {
             <CatoMessage
               className="mt-3"
               variant="incentivando"
-              message="Você ainda não estudou nada. Comece adicionando um material à sua biblioteca. Eu estudo com você."
-            />
+              message="Você ainda não começou nenhum conteúdo. Envie seu primeiro material e vamos começar."
+            ><Button asChild size="sm"><Link to="/adicionar">Começar agora</Link></Button></CatoMessage>
           )}
 
           <h3 className="mt-6 text-sm font-semibold">Minhas matérias</h3>
@@ -336,6 +378,17 @@ function HomePage() {
           </div>
         </div>
       </section>
+
+      <Dialog open={guideOpen} onOpenChange={setGuideOpen}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Vamos encontrar seu próximo passo</DialogTitle><DialogDescription>Escolha o que mais parece com seu momento. A sugestão usa seu histórico real.</DialogDescription></DialogHeader>
+          <div className="grid gap-2">
+            {START_OPTIONS.map((option) => <Button key={option.id} type="button" variant={guideSituation === option.id ? "default" : "outline"} className="h-auto justify-start whitespace-normal py-3 text-left" onClick={() => setGuideSituation(option.id)}>{option.label}</Button>)}
+          </div>
+          <div><label className="text-xs font-medium" htmlFor="guide-minutes">Quanto tempo você tem?</label><select id="guide-minutes" value={guideMinutes} onChange={(event) => setGuideMinutes(event.target.value)} className="mt-1.5 h-9 w-full rounded-md border border-input bg-background px-3 text-sm"><option value="10">10 minutos</option><option value="20">20 minutos</option><option value="30">30 minutos</option><option value="45">45 minutos</option></select></div>
+          <Button disabled={!guideSituation || thinking} onClick={() => void askCoach(Number(guideMinutes), guideSituation)}>{thinking ? <Loader2 className="size-4 animate-spin" /> : <Wand2 className="size-4" />}Montar meu caminho</Button>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

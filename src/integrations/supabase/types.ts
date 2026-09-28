@@ -250,6 +250,7 @@ export type Database = {
       }
       books: {
         Row: {
+          completed_at: string | null
           course_id: string | null
           created_at: string
           current_chapter: number
@@ -261,6 +262,7 @@ export type Database = {
           generation_status: string
           id: string
           introduction: string | null
+          last_opened_at: string | null
           material_ids: string[]
           outline: Json
           reading_progress: number
@@ -276,6 +278,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          completed_at?: string | null
           course_id?: string | null
           created_at?: string
           current_chapter?: number
@@ -287,6 +290,7 @@ export type Database = {
           generation_status?: string
           id?: string
           introduction?: string | null
+          last_opened_at?: string | null
           material_ids?: string[]
           outline?: Json
           reading_progress?: number
@@ -302,6 +306,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          completed_at?: string | null
           course_id?: string | null
           created_at?: string
           current_chapter?: number
@@ -313,6 +318,7 @@ export type Database = {
           generation_status?: string
           id?: string
           introduction?: string | null
+          last_opened_at?: string | null
           material_ids?: string[]
           outline?: Json
           reading_progress?: number
@@ -558,6 +564,7 @@ export type Database = {
         Row: {
           back: string
           created_at: string
+          due_at: string
           ease: number
           front: string
           id: string
@@ -571,6 +578,7 @@ export type Database = {
         Insert: {
           back: string
           created_at?: string
+          due_at?: string
           ease?: number
           front: string
           id?: string
@@ -584,6 +592,7 @@ export type Database = {
         Update: {
           back?: string
           created_at?: string
+          due_at?: string
           ease?: number
           front?: string
           id?: string
@@ -743,6 +752,7 @@ export type Database = {
           created_at: string
           data: Json
           id: string
+          source_material_ids: string[]
           subject_id: string | null
           title: string
           topic_id: string | null
@@ -752,6 +762,7 @@ export type Database = {
           created_at?: string
           data?: Json
           id?: string
+          source_material_ids?: string[]
           subject_id?: string | null
           title: string
           topic_id?: string | null
@@ -761,6 +772,7 @@ export type Database = {
           created_at?: string
           data?: Json
           id?: string
+          source_material_ids?: string[]
           subject_id?: string | null
           title?: string
           topic_id?: string | null
@@ -1019,6 +1031,7 @@ export type Database = {
           id: string
           is_correct: boolean
           question_id: string
+          response_ms: number | null
           score: number | null
           user_answer: string | null
           user_id: string
@@ -1030,6 +1043,7 @@ export type Database = {
           id?: string
           is_correct?: boolean
           question_id: string
+          response_ms?: number | null
           score?: number | null
           user_answer?: string | null
           user_id: string
@@ -1041,6 +1055,7 @@ export type Database = {
           id?: string
           is_correct?: boolean
           question_id?: string
+          response_ms?: number | null
           score?: number | null
           user_answer?: string | null
           user_id?: string
@@ -1244,6 +1259,9 @@ export type Database = {
           preferred_times: string[]
           quiet_end: string
           quiet_start: string
+          reminder_days: number[]
+          reminder_kinds: string[]
+          reminder_time: string
           subjects: string[]
           timezone: string
           updated_at: string
@@ -1261,6 +1279,9 @@ export type Database = {
           preferred_times?: string[]
           quiet_end?: string
           quiet_start?: string
+          reminder_days?: number[]
+          reminder_kinds?: string[]
+          reminder_time?: string
           subjects?: string[]
           timezone?: string
           updated_at?: string
@@ -1278,6 +1299,9 @@ export type Database = {
           preferred_times?: string[]
           quiet_end?: string
           quiet_start?: string
+          reminder_days?: number[]
+          reminder_kinds?: string[]
+          reminder_time?: string
           subjects?: string[]
           timezone?: string
           updated_at?: string
