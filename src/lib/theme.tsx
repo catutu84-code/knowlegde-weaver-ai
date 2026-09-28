@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { supabase } from "@/integrations/supabase/client";
 
@@ -111,6 +111,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
   const [hasChosenTheme, setHasChosenTheme] = useState(true);
   const [systemTick, setSystemTick] = useState(0);
+  const persistQueue = useRef<Promise<void>>(Promise.resolve());
 
   // Hidrata a partir do armazenamento local (evita piscar) e depois do perfil.
   useEffect(() => {
@@ -168,7 +169,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       applyAppearance(next);
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
       setHasChosenTheme(true);
-      await persistToProfile(next).catch(() => undefined);
+      persistQueue.current = persistQueue.current.then(() => persistToProfile(next)).catch(() => undefined);
+      await persistQueue.current;
     },
     [],
   );

@@ -14,14 +14,14 @@ export function AppearanceOnboarding() {
     if (!hasChosenTheme) setOpen(true);
   }, [hasChosenTheme]);
 
-  function finish() {
-    void savePrefs({});
+  async function finish() {
+    await savePrefs({});
     markThemeChosen();
     setOpen(false);
   }
 
   return (
-    <Dialog open={open} onOpenChange={(next) => (next ? setOpen(true) : finish())}>
+    <Dialog open={open} onOpenChange={(next) => (next ? setOpen(true) : void finish())}>
       <DialogContent className="max-h-[92vh] max-w-4xl overflow-y-auto">
         <DialogHeader className="items-center text-center">
           <Cato variant="padrao" size="lg" />
@@ -30,8 +30,8 @@ export function AppearanceOnboarding() {
         </DialogHeader>
         <AppearancePanel compact />
         <DialogFooter className="gap-2 sm:space-x-0">
-          <Button variant="ghost" onClick={finish}>Pular por agora</Button>
-          <Button onClick={finish}>Começar com este tema</Button>
+          <Button variant="ghost" onClick={() => void finish()}>Pular por agora</Button>
+          <Button onClick={() => void finish()}>Começar com este tema</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
