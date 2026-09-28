@@ -436,3 +436,15 @@ html[data-reduced-motion="true"] .cato-anim * {
     animation: none !important;
   }
 }
+
+/* Miniaturas reais da interface na seleção de tema. */
+.theme-preview { background: var(--preview-bg); border-color: var(--preview-border); }
+.theme-preview-sidebar { background: var(--preview-primary); }
+.theme-preview-text { background: var(--preview-text); }
+.theme-preview-card { background: var(--preview-card); border: 1px solid var(--preview-border); }
+.theme-preview-accent { background: var(--preview-accent); }
+.theme-preview[data-theme-preview="pink"] { --preview-bg:#fff8fc; --preview-card:#fff; --preview-primary:#d85b9b; --preview-accent:#a9d7f7; --preview-text:#273142; --preview-border:#f0e3ea; }
+.theme-preview[data-theme-preview="blue"] { --preview-bg:#f5faff; --preview-card:#fff; --preview-primary:#4b9bd5; --preview-accent:#e891bc; --preview-text:#253244; --preview-border:#dce9f5; }
+.theme-preview[data-theme-preview="light"] { --preview-bg:#f8fafc; --preview-card:#fff; --preview-primary:#6574c4; --preview-accent:#d85b9b; --preview-text:#1f2937; --preview-border:#e2e8f0; }
+.theme-preview[data-theme-preview="dark"] { --preview-bg:#0f172a; --preview-card:#182235; --preview-primary:#82bde8; --preview-accent:#f18ab8; --preview-text:#f8fafc; --preview-border:#334155; }
+.theme-preview[data-theme-preview="system"] { --preview-bg:linear-gradient(90deg,#f8fafc 50%,#0f172a 50%); --preview-card:#fff; --preview-primary:#d85b9b; --preview-accent:#82bde8; --preview-text:#6574c4; --preview-border:#94a3b8; }

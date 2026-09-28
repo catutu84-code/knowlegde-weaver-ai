@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { Cato, CatoMessage } from "@/components/brand/Cato";
 
 export const Route = createFileRoute("/_authenticated/pausa")({
   head: () => ({
@@ -128,7 +129,7 @@ function PausaPage() {
       <div className="space-y-5">
         <PageHeader title="Pausa Catoala" description="Um espaço para respirar quando o estudo pesa." />
         <section className="surface space-y-4 p-6">
-          <Heart className="size-6 text-primary" />
+          <CatoMessage variant="acolhedor" message="Hoje foi difícil, mas você apareceu. Isso já importa." />
           <h2 className="text-lg font-semibold">Antes de começarmos</h2>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li>• Este espaço é de escuta e acolhimento — não é atendimento psicológico nem serviço de emergência.</li>
@@ -173,7 +174,7 @@ function PausaPage() {
         <div className="flex-1 space-y-4 overflow-y-auto">
           {messages.length === 0 ? (
             <div className="py-8 text-center">
-              <Heart className="mx-auto size-7 text-primary" />
+              <Cato variant="acolhedor" size="lg" className="mx-auto" />
               <p className="mt-3 text-sm text-muted-foreground">
                 Me conta o que está pesando. Sem cobrança, sem julgamento.
               </p>
@@ -205,9 +206,9 @@ function PausaPage() {
             ))
           )}
           {busy ? (
-            <p className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="size-4 animate-spin text-primary" /> A Catoala está aqui, pensando com carinho...
-            </p>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Cato variant="acolhedor" size="xs" /> A Catoala está aqui, pensando com carinho...
+            </div>
           ) : null}
           <div ref={endRef} />
         </div>

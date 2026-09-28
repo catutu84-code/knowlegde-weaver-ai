@@ -69,13 +69,13 @@ export function AppearancePanel({ compact = false }: { compact?: boolean }) {
                 selected ? "border-primary ring-2 ring-primary/20" : "border-border hover:border-primary/60",
               )}
             >
-              <div className="mb-3 h-16 overflow-hidden rounded-lg border border-border bg-background p-2" aria-hidden="true">
+              <div data-theme-preview={item.id} className="theme-preview mb-3 h-16 overflow-hidden rounded-lg border p-2" aria-hidden="true">
                 <div className="flex h-full gap-1.5">
-                  <div className="w-4 rounded-sm" style={{ backgroundColor: item.swatch[1] }} />
+                  <div className="theme-preview-sidebar w-4 rounded-sm" />
                   <div className="flex flex-1 flex-col gap-1.5">
-                    <div className="h-2 w-2/3 rounded-full" style={{ backgroundColor: item.swatch[3] }} />
-                    <div className="flex-1 rounded-sm" style={{ backgroundColor: item.swatch[0] }} />
-                    <div className="h-2 w-1/2 rounded-full" style={{ backgroundColor: item.swatch[2] }} />
+                    <div className="theme-preview-text h-2 w-2/3 rounded-full" />
+                    <div className="theme-preview-card flex-1 rounded-sm" />
+                    <div className="theme-preview-accent h-2 w-1/2 rounded-full" />
                   </div>
                 </div>
               </div>
