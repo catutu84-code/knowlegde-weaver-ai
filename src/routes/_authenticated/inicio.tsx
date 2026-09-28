@@ -22,6 +22,7 @@ import {
   MessageCircle,
   RefreshCw,
   HelpCircle,
+  GraduationCap,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -171,7 +172,13 @@ function HomePage() {
   async function askCoach(minutesWanted: number, situation?: string) {
     setThinking(true);
     try {
-      const result = await suggest({ data: { minutes: minutesWanted, situation, focus: nextSubject ?? undefined } });
+      const result = await suggest({
+        data: {
+          minutes: minutesWanted,
+          ...(situation ? { situation } : {}),
+          ...(nextSubject ? { focus: nextSubject } : {}),
+        },
+      });
       setSuggestion(result);
       setGuideOpen(false);
     } catch (error) {
