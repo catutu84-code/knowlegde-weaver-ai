@@ -427,6 +427,56 @@ export type Database = {
           },
         ]
       }
+      concept_mastery: {
+        Row: {
+          attempts: number
+          average_response_ms: number
+          concept: string
+          correct_count: number
+          id: string
+          last_seen_at: string
+          level: number
+          material_id: string
+          needs_review: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          average_response_ms?: number
+          concept: string
+          correct_count?: number
+          id?: string
+          last_seen_at?: string
+          level?: number
+          material_id: string
+          needs_review?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          average_response_ms?: number
+          concept?: string
+          correct_count?: number
+          id?: string
+          last_seen_at?: string
+          level?: number
+          material_id?: string
+          needs_review?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "concept_mastery_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "materials"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       courses: {
         Row: {
           color: string
@@ -623,6 +673,308 @@ export type Database = {
             columns: ["topic_id"]
             isOneToOne: false
             referencedRelation: "topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      game_answers: {
+        Row: {
+          answer: string
+          challenge_id: string
+          created_at: string
+          feedback: Json
+          hint_used: boolean
+          id: string
+          is_correct: boolean
+          justification: string | null
+          mastery_signal: string
+          response_ms: number
+          session_id: string
+          user_id: string
+        }
+        Insert: {
+          answer: string
+          challenge_id: string
+          created_at?: string
+          feedback?: Json
+          hint_used?: boolean
+          id?: string
+          is_correct: boolean
+          justification?: string | null
+          mastery_signal?: string
+          response_ms?: number
+          session_id: string
+          user_id: string
+        }
+        Update: {
+          answer?: string
+          challenge_id?: string
+          created_at?: string
+          feedback?: Json
+          hint_used?: boolean
+          id?: string
+          is_correct?: boolean
+          justification?: string | null
+          mastery_signal?: string
+          response_ms?: number
+          session_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_answers_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "game_challenges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_answers_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "game_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      game_challenges: {
+        Row: {
+          challenge_type: string
+          concept: string
+          correct_answer: string
+          created_at: string
+          difficulty: number
+          explanation: string
+          id: string
+          justification_required: boolean
+          metadata: Json
+          options: Json
+          phase: string
+          position: number
+          prompt: string
+          session_id: string
+          source_excerpt: string | null
+          source_ref: string
+          user_id: string
+        }
+        Insert: {
+          challenge_type: string
+          concept: string
+          correct_answer: string
+          created_at?: string
+          difficulty?: number
+          explanation: string
+          id?: string
+          justification_required?: boolean
+          metadata?: Json
+          options?: Json
+          phase: string
+          position: number
+          prompt: string
+          session_id: string
+          source_excerpt?: string | null
+          source_ref: string
+          user_id: string
+        }
+        Update: {
+          challenge_type?: string
+          concept?: string
+          correct_answer?: string
+          created_at?: string
+          difficulty?: number
+          explanation?: string
+          id?: string
+          justification_required?: boolean
+          metadata?: Json
+          options?: Json
+          phase?: string
+          position?: number
+          prompt?: string
+          session_id?: string
+          source_excerpt?: string | null
+          source_ref?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_challenges_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "game_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      game_profiles: {
+        Row: {
+          coins: number
+          created_at: string
+          equipped: Json
+          game_xp: number
+          id: string
+          unlocked_items: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          coins?: number
+          created_at?: string
+          equipped?: Json
+          game_xp?: number
+          id?: string
+          unlocked_items?: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          coins?: number
+          created_at?: string
+          equipped?: Json
+          game_xp?: number
+          id?: string
+          unlocked_items?: string[]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      game_sessions: {
+        Row: {
+          coins_earned: number
+          correct_count: number
+          current_index: number
+          difficulty: number
+          finished_at: string | null
+          hints_used: number
+          id: string
+          material_id: string
+          mode: string
+          score: number
+          started_at: string
+          status: string
+          subject_id: string | null
+          summary: Json
+          topic_id: string | null
+          total: number
+          updated_at: string
+          user_id: string
+          wrong_count: number
+          xp_earned: number
+        }
+        Insert: {
+          coins_earned?: number
+          correct_count?: number
+          current_index?: number
+          difficulty?: number
+          finished_at?: string | null
+          hints_used?: number
+          id?: string
+          material_id: string
+          mode: string
+          score?: number
+          started_at?: string
+          status?: string
+          subject_id?: string | null
+          summary?: Json
+          topic_id?: string | null
+          total?: number
+          updated_at?: string
+          user_id: string
+          wrong_count?: number
+          xp_earned?: number
+        }
+        Update: {
+          coins_earned?: number
+          correct_count?: number
+          current_index?: number
+          difficulty?: number
+          finished_at?: string | null
+          hints_used?: number
+          id?: string
+          material_id?: string
+          mode?: string
+          score?: number
+          started_at?: string
+          status?: string
+          subject_id?: string | null
+          summary?: Json
+          topic_id?: string | null
+          total?: number
+          updated_at?: string
+          user_id?: string
+          wrong_count?: number
+          xp_earned?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_sessions_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "materials"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_sessions_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_sessions_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      material_insights: {
+        Row: {
+          concepts: Json
+          created_at: string
+          id: string
+          key_points: Json
+          material_id: string
+          processes: Json
+          source_fingerprint: string
+          subtopics: Json
+          themes: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          concepts?: Json
+          created_at?: string
+          id?: string
+          key_points?: Json
+          material_id: string
+          processes?: Json
+          source_fingerprint: string
+          subtopics?: Json
+          themes?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          concepts?: Json
+          created_at?: string
+          id?: string
+          key_points?: Json
+          material_id?: string
+          processes?: Json
+          source_fingerprint?: string
+          subtopics?: Json
+          themes?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "material_insights_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "materials"
             referencedColumns: ["id"]
           },
         ]
