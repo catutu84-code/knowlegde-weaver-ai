@@ -21,6 +21,7 @@ import { Route as AuthenticatedErrosRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedEstudioRouteImport } from './routes/_authenticated/estudio'
 import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authenticated/favoritos'
 import { Route as AuthenticatedFlashcardsRouteImport } from './routes/_authenticated/flashcards'
+import { Route as AuthenticatedGameLabRouteImport } from './routes/_authenticated/game-lab'
 import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
 import { Route as AuthenticatedLivroRouteImport } from './routes/_authenticated/livro'
 import { Route as AuthenticatedMapasRouteImport } from './routes/_authenticated/mapas'
@@ -93,6 +94,11 @@ const AuthenticatedFavoritosRoute = AuthenticatedFavoritosRouteImport.update({
 const AuthenticatedFlashcardsRoute = AuthenticatedFlashcardsRouteImport.update({
   id: '/flashcards',
   path: '/flashcards',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedGameLabRoute = AuthenticatedGameLabRouteImport.update({
+  id: '/game-lab',
+  path: '/game-lab',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedInicioRoute = AuthenticatedInicioRouteImport.update({
@@ -175,6 +181,7 @@ export interface FileRoutesByFullPath {
   '/estudio': typeof AuthenticatedEstudioRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/flashcards': typeof AuthenticatedFlashcardsRoute
+  '/game-lab': typeof AuthenticatedGameLabRoute
   '/inicio': typeof AuthenticatedInicioRoute
   '/livro': typeof AuthenticatedLivroRouteWithChildren
   '/mapas': typeof AuthenticatedMapasRoute
@@ -201,6 +208,7 @@ export interface FileRoutesByTo {
   '/estudio': typeof AuthenticatedEstudioRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/flashcards': typeof AuthenticatedFlashcardsRoute
+  '/game-lab': typeof AuthenticatedGameLabRoute
   '/inicio': typeof AuthenticatedInicioRoute
   '/livro': typeof AuthenticatedLivroRouteWithChildren
   '/mapas': typeof AuthenticatedMapasRoute
@@ -229,6 +237,7 @@ export interface FileRoutesById {
   '/_authenticated/estudio': typeof AuthenticatedEstudioRoute
   '/_authenticated/favoritos': typeof AuthenticatedFavoritosRoute
   '/_authenticated/flashcards': typeof AuthenticatedFlashcardsRoute
+  '/_authenticated/game-lab': typeof AuthenticatedGameLabRoute
   '/_authenticated/inicio': typeof AuthenticatedInicioRoute
   '/_authenticated/livro': typeof AuthenticatedLivroRouteWithChildren
   '/_authenticated/mapas': typeof AuthenticatedMapasRoute
@@ -257,6 +266,7 @@ export interface FileRouteTypes {
     | '/estudio'
     | '/favoritos'
     | '/flashcards'
+    | '/game-lab'
     | '/inicio'
     | '/livro'
     | '/mapas'
@@ -283,6 +293,7 @@ export interface FileRouteTypes {
     | '/estudio'
     | '/favoritos'
     | '/flashcards'
+    | '/game-lab'
     | '/inicio'
     | '/livro'
     | '/mapas'
@@ -310,6 +321,7 @@ export interface FileRouteTypes {
     | '/_authenticated/estudio'
     | '/_authenticated/favoritos'
     | '/_authenticated/flashcards'
+    | '/_authenticated/game-lab'
     | '/_authenticated/inicio'
     | '/_authenticated/livro'
     | '/_authenticated/mapas'
@@ -416,6 +428,13 @@ declare module '@tanstack/react-router' {
       path: '/flashcards'
       fullPath: '/flashcards'
       preLoaderRoute: typeof AuthenticatedFlashcardsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/game-lab': {
+      id: '/_authenticated/game-lab'
+      path: '/game-lab'
+      fullPath: '/game-lab'
+      preLoaderRoute: typeof AuthenticatedGameLabRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/inicio': {
@@ -533,6 +552,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedEstudioRoute: typeof AuthenticatedEstudioRoute
   AuthenticatedFavoritosRoute: typeof AuthenticatedFavoritosRoute
   AuthenticatedFlashcardsRoute: typeof AuthenticatedFlashcardsRoute
+  AuthenticatedGameLabRoute: typeof AuthenticatedGameLabRoute
   AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
   AuthenticatedLivroRoute: typeof AuthenticatedLivroRouteWithChildren
   AuthenticatedMapasRoute: typeof AuthenticatedMapasRoute
@@ -556,6 +576,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedEstudioRoute: AuthenticatedEstudioRoute,
   AuthenticatedFavoritosRoute: AuthenticatedFavoritosRoute,
   AuthenticatedFlashcardsRoute: AuthenticatedFlashcardsRoute,
+  AuthenticatedGameLabRoute: AuthenticatedGameLabRoute,
   AuthenticatedInicioRoute: AuthenticatedInicioRoute,
   AuthenticatedLivroRoute: AuthenticatedLivroRouteWithChildren,
   AuthenticatedMapasRoute: AuthenticatedMapasRoute,
