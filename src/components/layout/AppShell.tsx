@@ -26,6 +26,7 @@ import {
   Wand2,
   Activity,
   Heart,
+  Gamepad2,
 } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -46,6 +47,7 @@ const NAV = [
   { to: "/inicio", label: "Início", icon: Home },
   { to: "/tutor", label: "Professora Catoala", icon: Bot },
   { to: "/estudio", label: "Estúdio Catoala", icon: Wand2 },
+  { to: "/game-lab", label: "Game Lab", icon: Gamepad2 },
   { to: "/livro", label: "Modo Livro", icon: BookOpen },
   { to: "/mapas", label: "Mapas Mentais", icon: Network },
   { to: "/quiz", label: "Quiz", icon: Target },

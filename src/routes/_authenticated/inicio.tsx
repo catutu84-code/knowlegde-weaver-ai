@@ -23,6 +23,7 @@ import {
   RefreshCw,
   HelpCircle,
   GraduationCap,
+  Gamepad2,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -57,6 +58,7 @@ const quickActions = [
   { to: "/adicionar", label: "Enviar material", icon: Upload },
   { to: "/livro", label: "Criar livro", icon: BookOpen },
   { to: "/estudio", label: "Explicar conteúdo", icon: Brain },
+  { to: "/game-lab", label: "Jogar com o conteúdo", icon: Gamepad2 },
   { to: "/quiz", label: "Criar questões", icon: Target },
   { to: "/flashcards", label: "Criar flashcards", icon: Layers3 },
   { to: "/simulados", label: "Criar simulado", icon: GraduationCap },
@@ -69,6 +71,7 @@ const learnWays = [
   { to: "/quiz", label: "Quero testar", hint: "Responda questões comentadas", icon: Target },
   { to: "/flashcards", label: "Quero memorizar", hint: "Revise com cartões inteligentes", icon: Layers3 },
   { to: "/revisoes", label: "Quero revisar", hint: "Priorize o que precisa de atenção", icon: RefreshCw },
+  { to: "/game-lab", label: "Quero praticar", hint: "Jogue desafios criados com seus materiais", icon: Gamepad2 },
   { to: "/tutor", label: "Quero conversar", hint: "Tire dúvidas com a Professora Catoala", icon: Bot },
 ] as const;
 
@@ -88,6 +91,7 @@ const ACTION_LINK: Record<string, string> = {
   resumo: "/estudio",
   mapa: "/mapas",
   tutor: "/tutor",
+  game_lab: "/game-lab",
 };
 
 function HomePage() {

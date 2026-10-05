@@ -88,7 +88,7 @@ export const startGameSession = createServerFn({ method: "POST" })
       title: material.title,
       materialText: material.extracted_text.slice(0, 50000),
       mode: data.mode,
-      phases: modePhases[data.mode] ?? modePhases.conteudo,
+      phases: modePhases[data.mode] ?? modePhases["conteudo"] ?? [],
       difficulty,
       avoidPrompts: (previous ?? []).map((row: { prompt: string }) => row.prompt),
     });
