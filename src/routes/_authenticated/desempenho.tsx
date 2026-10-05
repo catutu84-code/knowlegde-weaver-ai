@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { BarChart3, Clock, Target, TrendingUp } from "lucide-react";
+import { BarChart3, Clock, Gamepad2, Target, TrendingUp } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useProfile, useSession } from "@/lib/auth";
@@ -13,6 +13,10 @@ export const Route = createFileRoute("/_authenticated/desempenho")({
     meta: [
       { title: "Meu desempenho — Tutor IA Catoala" },
       { name: "description", content: "Acompanhe evolução, acertos, tempo de estudo e pontos fracos." },
+      { property: "og:title", content: "Meu desempenho — Tutor IA Catoala" },
+      { property: "og:description", content: "Acompanhe evolução, acertos, tempo de estudo e pontos fracos." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: PerformancePage,
@@ -26,7 +30,7 @@ function PerformancePage() {
     queryKey: ["performance", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const [attempts, sessions, errors, subjects] = await Promise.all([
+      const [attempts, sessions, errors, subjects, games] = await Promise.all([
         supabase
           .from("quiz_attempts")
           .select("score,total,created_at")
@@ -41,12 +45,20 @@ function PerformancePage() {
           .order("times_wrong", { ascending: false })
           .limit(8),
         supabase.from("subjects").select("id,name").eq("user_id", user!.id),
+        supabase
+          .from("game_sessions")
+          .select("id,score,status,xp_earned,started_at")
+          .eq("user_id", user!.id)
+          .eq("status", "completed")
+          .order("started_at", { ascending: false })
+          .limit(20),
       ]);
       return {
         attempts: attempts.data ?? [],
         sessions: sessions.data ?? [],
         errors: errors.data ?? [],
         subjects: subjects.data ?? [],
+        games: games.data ?? [],
       };
     },
   });
@@ -59,6 +71,10 @@ function PerformancePage() {
   const accuracy = totalQuestions ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
   const level = levelFromXp(profile?.xp ?? 0);
   const nextLevel = level.next;
+  const games = data.data?.games ?? [];
+  const gameAverage = games.length
+    ? Math.round(games.reduce((sum, game) => sum + (game.score ?? 0), 0) / games.length)
+    : 0;
 
   const byKind = sessions.reduce<Record<string, number>>((acc, s) => {
     acc[s.kind] = (acc[s.kind] ?? 0) + (s.minutes ?? 0);
@@ -75,6 +91,17 @@ function PerformancePage() {
         <Stat icon={Clock} label="Tempo total" value={`${Math.round(totalMinutes / 60)}h`} hint={`${totalMinutes} min`} />
         <Stat icon={TrendingUp} label="Nível" value={level.name} hint={`${profile?.xp ?? 0} XP`} />
         <Stat icon={BarChart3} label="Sessões" value={String(sessions.length)} hint="atividades registradas" />
+      </div>
+
+      <div className="surface p-5">
+        <div className="flex items-center gap-2 text-sm font-semibold">
+          <Gamepad2 className="size-4 text-primary" /> Game Lab
+        </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+          <div><p className="text-xl font-bold">{games.length}</p><p className="text-xs text-muted-foreground">partidas concluídas</p></div>
+          <div><p className="text-xl font-bold">{gameAverage}%</p><p className="text-xs text-muted-foreground">média nos desafios</p></div>
+          <div><p className="text-xl font-bold">{games.reduce((sum, game) => sum + (game.xp_earned ?? 0), 0)}</p><p className="text-xs text-muted-foreground">XP conquistado em jogos</p></div>
+        </div>
       </div>
 
       {nextLevel ? (

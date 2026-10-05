@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { ArrowLeft, Loader2, Sparkles, Share2, Layers3, Network, Target } from "lucide-react";
+import { ArrowLeft, Gamepad2, Loader2, Sparkles, Share2, Layers3, Network, Target } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -23,6 +23,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/material/$materialId")({
+  head: () => ({
+    meta: [
+      { title: "Estudar material — Tutor IA Catoala" },
+      { name: "description", content: "Estude um material com explicações, jogos, questões, flashcards e mapas mentais." },
+      { property: "og:title", content: "Estudar material — Tutor IA Catoala" },
+      { property: "og:description", content: "Ferramentas de estudo conectadas ao seu material." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: MaterialPage,
 });
 
@@ -204,6 +214,18 @@ function MaterialPage() {
 
             <div className="mt-4 flex flex-wrap gap-2">
               <Button
+                asChild
+                disabled={notReady || busy !== null}
+                onClick={() => window.sessionStorage.setItem("catoala-game-material", materialId)}
+              >
+                <Link to="/game-lab">
+                  <Gamepad2 className="size-4" />
+                  Jogar no Game Lab
+                </Link>
+              </Button>
+
+              <Button
+                variant="outline"
                 disabled={notReady || busy !== null}
                 onClick={() =>
                   run("explain", async () => {

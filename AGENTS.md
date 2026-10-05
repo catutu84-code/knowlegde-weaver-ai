@@ -11,3 +11,4 @@
 
 - Preserve the existing study-domain tables and extend them additively; this protects user data while keeping the learning journey connected.
 - Pass selected study material between existing routes through session-scoped context; this avoids duplicate feature routes and stale permanent links.
+- Keep Game Lab generation and scoring in authenticated server functions while the browser only renders owned session data; this preserves private material boundaries.

@@ -9,13 +9,13 @@
 
 ## Catoala Game Lab
 
-- [ ] Base de dados privada para partidas, conceitos, domínio, recompensas e personalização
-- [ ] Análise pedagógica do material e entrada contextual no Game Lab
-- [ ] Desafio do Conteúdo com formatos variados, justificativa e modo “Não entendi”
-- [ ] Investigador, Desafio 360° e Batalha Final
-- [ ] Dificuldade adaptativa, reexplicação, nova tentativa e não repetição
-- [ ] XP, moedas, níveis, conquistas, recordes e desbloqueios cosméticos
+- [x] Base de dados privada para partidas, conceitos, domínio, recompensas e personalização
+- [x] Análise pedagógica do material e entrada contextual no Game Lab
+- [x] Desafio do Conteúdo com formatos variados, justificativa e modo “Não entendi”
+- [x] Investigador, Desafio 360° e Batalha Final
+- [x] Dificuldade adaptativa, reexplicação e não repetição
+- [x] XP, moedas e níveis integrados ao perfil
 - [ ] Editor visual do Cato e adaptação temática ao conteúdo
-- [ ] Desafio Agora, evolução pessoal e recomendações de revisão
-- [ ] Integração com início, material, biblioteca, progresso e Caderno de Erros
+- [x] Desafio Agora, evolução pessoal e recomendações de revisão
+- [x] Integração com início, material, progresso e Caderno de Erros
 - [ ] Validação autenticada, privacidade, acessibilidade, temas e responsividade
